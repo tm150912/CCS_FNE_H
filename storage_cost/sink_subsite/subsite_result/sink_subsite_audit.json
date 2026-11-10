@@ -1,0 +1,1449 @@
+{
+  "Method": "capacity_constrained_power_voronoi_lloyd",
+  "Scope": "largest_mainland_polygon_from_outline_only",
+  "Max_Area_km2": 8000.0,
+  "Subsite_Count": 271,
+  "Point_Method": "interior_label_point",
+  "Representative_Points_Strictly_Inside": true,
+  "Construction_Margin_km2": 2.0,
+  "Coverage_Tolerance_km2": 0.02,
+  "Vertex_Spacing_m": 1000.0,
+  "Basin_Area_Ratio_Limit": 1.03,
+  "Power_Area_Relative_Tolerance": 0.0001,
+  "Partition_Restarts": 3,
+  "Lloyd_Max_Iterations": 30,
+  "Partition_Seed": 47,
+  "Shape_Polish_Rounds": 8,
+  "Mean_Polish_Rounds": 4,
+  "Minimum_Compactness_Slack": 1e-06,
+  "Compactness_Objective": "arithmetic_mean_4piA_P2_in_each_basin_local_LAEA",
+  "Basin_Min_Subsite_Counts": {
+    "P16": 10
+  },
+  "Resource_Allocation_Basis": "uniform_original_area",
+  "Annual_Allocation_Basis": "original_basin_maximum_with_mainland_area_clipping",
+  "Annual_Allocation_Note": "CO2_EWR(tonne)对应原盆地最大年注入量；先乘大陆交集面积/原盆地面积，再按子场面积/大陆交集面积分配，即CO2_EWR(tonne)*子场面积/原盆地面积。合计对账大陆折减量，差异仅来自已验收的边界面积数值误差。",
+  "Resource_Note": "盆地平均参数和面积比例分配；不是实测子场储量或经验证的注入能力。",
+  "Engineering_Note": "资源分区不是羽流；本次不估计 Max_Well_Num 或 F/V 成本。",
+  "Excluded_Missing_Boundary": [
+    "P5",
+    "P12"
+  ],
+  "Basins": [
+    {
+      "Sink_ID": "P1",
+      "Sink_Name": "四川盆地",
+      "Subsite_Count": 26,
+      "Original_Area_km2": 203596.3366683852,
+      "Retained_Area_km2": 203596.3366683853,
+      "Retained_Area_Ratio": 1.0,
+      "Allocated_Total_CO2_t": 77600000000.00002,
+      "Allocated_Annual_Quota_t": 388000000.0426351,
+      "Parent_Max_Annual_Injection_t": 388000000.0,
+      "Mainland_Max_Annual_Injection_t": 388000000.00000024,
+      "Annual_Quota_Sum_Difference_t": 0.04263484477996826,
+      "Min_Area_km2": 7830.628319299368,
+      "Max_Area_km2": 7830.628359046976,
+      "Area_CV": 1.1269830419773993e-09,
+      "Area_Max_Min_Ratio": 1.0000000050759155,
+      "Compactness_Min": 0.7331266390001838,
+      "Compactness_Mean": 0.8272973651418488,
+      "Compactness_Median": 0.8369502018672945,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 26,
+          "max_relative_area_error": 4.012390419916301e-11,
+          "min_compactness": 0.7331266390001882,
+          "mean_compactness": 0.8272973651418479,
+          "chosen_restart": 2,
+          "chosen_outer": 30,
+          "evaluations": 3141,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 31,
+              "inner_iterations": 59,
+              "best_min_compactness": 0.6212347824805594
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.6534962178271392
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.6869320781227817
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.7331131817582714,
+            "mean_before": 0.8180061666404891,
+            "fixed_min_floor": 0.7331121817582714,
+            "min_after": 0.7331266390001882,
+            "mean_after": 0.8272973651418479,
+            "mean_gain": 0.009291198501358844,
+            "accepted": 84,
+            "trials": 560,
+            "evaluations": 1621,
+            "seconds": 59.991938000000005,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 23,
+                "min_compactness": 0.7335953450209355,
+                "mean_compactness": 0.8248583629453894
+              },
+              {
+                "round": 2,
+                "accepted": 19,
+                "min_compactness": 0.7333047716114591,
+                "mean_compactness": 0.826186324482662
+              },
+              {
+                "round": 3,
+                "accepted": 21,
+                "min_compactness": 0.733340120609743,
+                "mean_compactness": 0.826891032330665
+              },
+              {
+                "round": 4,
+                "accepted": 21,
+                "min_compactness": 0.7331266390001882,
+                "mean_compactness": 0.8272973651418479
+              }
+            ]
+          },
+          "seconds": 165.1457466
+        }
+      ],
+      "Missing_Area_km2": 1.8429182136391668e-05,
+      "Outside_Area_km2": 1.9310358145208633e-05,
+      "Overlap_Area_km2": 6.103515625e-11,
+      "Area_Sum_Difference_km2": 2.2371910745278e-05
+    },
+    {
+      "Sink_ID": "P2",
+      "Sink_Name": "江汉盆地",
+      "Subsite_Count": 4,
+      "Original_Area_km2": 31024.761081728237,
+      "Retained_Area_km2": 31024.761081728222,
+      "Retained_Area_Ratio": 0.9999999999999996,
+      "Allocated_Total_CO2_t": 52799999999.99997,
+      "Allocated_Annual_Quota_t": 264000000.02316386,
+      "Parent_Max_Annual_Injection_t": 264000000.0,
+      "Mainland_Max_Annual_Injection_t": 263999999.99999988,
+      "Annual_Quota_Sum_Difference_t": 0.023163974285125732,
+      "Min_Area_km2": 7756.1902663290375,
+      "Max_Area_km2": 7756.190276612195,
+      "Area_CV": 5.020916576365221e-10,
+      "Area_Max_Min_Ratio": 1.0000000013258001,
+      "Compactness_Min": 0.4841005645771178,
+      "Compactness_Mean": 0.6252748165090277,
+      "Compactness_Median": 0.6522074685820747,
+      "Compactness_Below_0_5_Count": 1,
+      "Partition_Diagnostics": [
+        {
+          "count": 4,
+          "max_relative_area_error": 4.947153797729698e-13,
+          "min_compactness": 0.4841005645771176,
+          "mean_compactness": 0.6252748165090285,
+          "chosen_restart": 0,
+          "chosen_outer": 10,
+          "evaluations": 1604,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 21,
+              "inner_iterations": 46,
+              "best_min_compactness": 0.4618452056068894
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 13,
+              "inner_iterations": 21,
+              "best_min_compactness": 0.44937980257222765
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 11,
+              "inner_iterations": 20,
+              "best_min_compactness": 0.4482840359018809
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.4840792477401718,
+            "mean_before": 0.6128153490580066,
+            "fixed_min_floor": 0.48407824774017183,
+            "min_after": 0.4841005645771176,
+            "mean_after": 0.6252748165090285,
+            "mean_gain": 0.012459467451021888,
+            "accepted": 13,
+            "trials": 151,
+            "evaluations": 497,
+            "seconds": 1.5337341000000038,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 2,
+                "min_compactness": 0.4840787357466903,
+                "mean_compactness": 0.6140592972079939
+              },
+              {
+                "round": 2,
+                "accepted": 3,
+                "min_compactness": 0.4841428640644839,
+                "mean_compactness": 0.6180105266977053
+              },
+              {
+                "round": 3,
+                "accepted": 5,
+                "min_compactness": 0.4841502136405353,
+                "mean_compactness": 0.6234443448558217
+              },
+              {
+                "round": 4,
+                "accepted": 3,
+                "min_compactness": 0.4841005645771176,
+                "mean_compactness": 0.6252748165090285
+              }
+            ]
+          },
+          "seconds": 5.178241799999995
+        }
+      ],
+      "Missing_Area_km2": 1.020515816983815e-05,
+      "Outside_Area_km2": 9.75312851225127e-06,
+      "Overlap_Area_km2": 1.9073486328125e-11,
+      "Area_Sum_Difference_km2": 2.722186764003709e-06
+    },
+    {
+      "Sink_ID": "P3",
+      "Sink_Name": "南襄盆地",
+      "Subsite_Count": 2,
+      "Original_Area_km2": 14367.40678992597,
+      "Retained_Area_km2": 14367.406789925983,
+      "Retained_Area_Ratio": 1.0,
+      "Allocated_Total_CO2_t": 7500000000.0,
+      "Allocated_Annual_Quota_t": 37499999.99934648,
+      "Parent_Max_Annual_Injection_t": 37500000.0,
+      "Mainland_Max_Annual_Injection_t": 37500000.00000004,
+      "Annual_Quota_Sum_Difference_t": -0.0006535574793815613,
+      "Min_Area_km2": 7183.703275975406,
+      "Max_Area_km2": 7183.70351370018,
+      "Area_CV": 1.6546115676012097e-08,
+      "Area_Max_Min_Ratio": 1.0000000330922318,
+      "Compactness_Min": 0.5948759372447475,
+      "Compactness_Mean": 0.6111889499188456,
+      "Compactness_Median": 0.6111889499188456,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 2,
+          "max_relative_area_error": 1.7817553654708718e-08,
+          "min_compactness": 0.5948759372447481,
+          "mean_compactness": 0.6111889499188454,
+          "chosen_restart": 2,
+          "chosen_outer": 7,
+          "evaluations": 889,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 24,
+              "inner_iterations": 28,
+              "best_min_compactness": 0.5447993560008119
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 25,
+              "inner_iterations": 34,
+              "best_min_compactness": 0.5447615003636929
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 26,
+              "inner_iterations": 34,
+              "best_min_compactness": 0.5449185571324707
+            }
+          ],
+          "polish_accepted": 4,
+          "mean_optimization": {
+            "min_before": 0.5948759372447481,
+            "mean_before": 0.6111889499188454,
+            "fixed_min_floor": 0.594874937244748,
+            "min_after": 0.5948759372447481,
+            "mean_after": 0.6111889499188454,
+            "mean_gain": 0.0,
+            "accepted": 0,
+            "trials": 88,
+            "evaluations": 290,
+            "seconds": 0.29338350000000446,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 0,
+                "min_compactness": 0.5948759372447481,
+                "mean_compactness": 0.6111889499188454
+              },
+              {
+                "round": 2,
+                "accepted": 0,
+                "min_compactness": 0.5948759372447481,
+                "mean_compactness": 0.6111889499188454
+              },
+              {
+                "round": 3,
+                "accepted": 0,
+                "min_compactness": 0.5948759372447481,
+                "mean_compactness": 0.6111889499188454
+              },
+              {
+                "round": 4,
+                "accepted": 0,
+                "min_compactness": 0.5948759372447481,
+                "mean_compactness": 0.6111889499188454
+              }
+            ]
+          },
+          "seconds": 1.106724000000014
+        }
+      ],
+      "Missing_Area_km2": 5.5412832532309045e-06,
+      "Outside_Area_km2": 5.167652480712886e-06,
+      "Overlap_Area_km2": 2.288818359375e-11,
+      "Area_Sum_Difference_km2": -2.5039662432391196e-07
+    },
+    {
+      "Sink_ID": "P4",
+      "Sink_Name": "苏北盆地",
+      "Subsite_Count": 5,
+      "Original_Area_km2": 51881.21631520458,
+      "Retained_Area_km2": 33518.4981307648,
+      "Retained_Area_Ratio": 0.646062303688545,
+      "Allocated_Total_CO2_t": 58081001101.600204,
+      "Allocated_Annual_Quota_t": 290405005.49418396,
+      "Parent_Max_Annual_Injection_t": 449500000.0,
+      "Mainland_Max_Annual_Injection_t": 290405005.50800097,
+      "Annual_Quota_Sum_Difference_t": -0.013817012310028076,
+      "Min_Area_km2": 6703.698301522763,
+      "Max_Area_km2": 6703.700891042011,
+      "Area_CV": 1.3634505230195565e-07,
+      "Area_Max_Min_Ratio": 1.000000386282188,
+      "Compactness_Min": 0.5622066814837657,
+      "Compactness_Mean": 0.6962405632268498,
+      "Compactness_Median": 0.7114052797961387,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 5,
+          "max_relative_area_error": 1.9730328892908489e-07,
+          "min_compactness": 0.5622066814837645,
+          "mean_compactness": 0.6962405632268505,
+          "chosen_restart": 2,
+          "chosen_outer": 0,
+          "evaluations": 1913,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 10,
+              "inner_iterations": 19,
+              "best_min_compactness": 0.5408651599528068
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 26,
+              "inner_iterations": 41,
+              "best_min_compactness": 0.5407909775823948
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 18,
+              "inner_iterations": 26,
+              "best_min_compactness": 0.5541600045937489
+            }
+          ],
+          "polish_accepted": 8,
+          "mean_optimization": {
+            "min_before": 0.5622006313263866,
+            "mean_before": 0.691511423640687,
+            "fixed_min_floor": 0.5621996313263866,
+            "min_after": 0.5622066814837645,
+            "mean_after": 0.6962405632268505,
+            "mean_gain": 0.0047291395861635,
+            "accepted": 9,
+            "trials": 152,
+            "evaluations": 536,
+            "seconds": 1.4040885999999944,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 1,
+                "min_compactness": 0.5622044923980706,
+                "mean_compactness": 0.6922939851246236
+              },
+              {
+                "round": 2,
+                "accepted": 2,
+                "min_compactness": 0.5622457051635367,
+                "mean_compactness": 0.6941119007718287
+              },
+              {
+                "round": 3,
+                "accepted": 3,
+                "min_compactness": 0.5622137382795362,
+                "mean_compactness": 0.6954428965065326
+              },
+              {
+                "round": 4,
+                "accepted": 3,
+                "min_compactness": 0.5622066814837645,
+                "mean_compactness": 0.6962405632268505
+              }
+            ]
+          },
+          "seconds": 5.723386800000014
+        }
+      ],
+      "Missing_Area_km2": 8.20508024034564e-06,
+      "Outside_Area_km2": 8.339103715181186e-06,
+      "Overlap_Area_km2": 3.0517578125e-11,
+      "Area_Sum_Difference_km2": -1.5947589417919517e-06
+    },
+    {
+      "Sink_ID": "P6",
+      "Sink_Name": "沁水盆地",
+      "Subsite_Count": 6,
+      "Original_Area_km2": 46006.30292966634,
+      "Retained_Area_km2": 46006.30292966637,
+      "Retained_Area_Ratio": 1.0,
+      "Allocated_Total_CO2_t": 29000000000.000004,
+      "Allocated_Annual_Quota_t": 145000000.05865887,
+      "Parent_Max_Annual_Injection_t": 145000000.0,
+      "Mainland_Max_Annual_Injection_t": 145000000.00000012,
+      "Annual_Quota_Sum_Difference_t": 0.058658748865127563,
+      "Min_Area_km2": 7667.712916793183,
+      "Max_Area_km2": 7667.7241583471805,
+      "Area_CV": 5.295413158225736e-07,
+      "Area_Max_Min_Ratio": 1.0000014660895784,
+      "Compactness_Min": 0.8073717416821955,
+      "Compactness_Mean": 0.8264883113388608,
+      "Compactness_Median": 0.8215273245014737,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 6,
+          "max_relative_area_error": 9.141877104212881e-07,
+          "min_compactness": 0.807371741682195,
+          "mean_compactness": 0.8264883113388616,
+          "chosen_restart": 2,
+          "chosen_outer": 30,
+          "evaluations": 1933,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 29,
+              "inner_iterations": 39,
+              "best_min_compactness": 0.7880338789151629
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 23,
+              "inner_iterations": 33,
+              "best_min_compactness": 0.7880008365845874
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 41,
+              "best_min_compactness": 0.7882160926427672
+            }
+          ],
+          "polish_accepted": 6,
+          "mean_optimization": {
+            "min_before": 0.8073588658699503,
+            "mean_before": 0.825117690065914,
+            "fixed_min_floor": 0.8073578658699503,
+            "min_after": 0.807371741682195,
+            "mean_after": 0.8264883113388616,
+            "mean_gain": 0.0013706212729476253,
+            "accepted": 9,
+            "trials": 202,
+            "evaluations": 621,
+            "seconds": 2.016794400000009,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 0,
+                "min_compactness": 0.8073588658699503,
+                "mean_compactness": 0.825117690065914
+              },
+              {
+                "round": 2,
+                "accepted": 3,
+                "min_compactness": 0.8076220478015537,
+                "mean_compactness": 0.8259315334205054
+              },
+              {
+                "round": 3,
+                "accepted": 2,
+                "min_compactness": 0.8075548857253372,
+                "mean_compactness": 0.8262643828010227
+              },
+              {
+                "round": 4,
+                "accepted": 4,
+                "min_compactness": 0.807371741682195,
+                "mean_compactness": 0.8264883113388616
+              }
+            ]
+          },
+          "seconds": 6.449494900000019
+        }
+      ],
+      "Missing_Area_km2": 8.031819527492562e-06,
+      "Outside_Area_km2": 8.255954772103694e-06,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": 1.861152850324288e-05
+    },
+    {
+      "Sink_ID": "P7",
+      "Sink_Name": "柴达木盆地",
+      "Subsite_Count": 14,
+      "Original_Area_km2": 111827.08961545909,
+      "Retained_Area_km2": 111827.08961545925,
+      "Retained_Area_Ratio": 1.0,
+      "Allocated_Total_CO2_t": 21499999999.999996,
+      "Allocated_Annual_Quota_t": 107500000.03039001,
+      "Parent_Max_Annual_Injection_t": 107500000.0,
+      "Mainland_Max_Annual_Injection_t": 107500000.00000015,
+      "Annual_Quota_Sum_Difference_t": 0.030389860272407532,
+      "Min_Area_km2": 7987.6492093960605,
+      "Max_Area_km2": 7987.6493521095135,
+      "Area_CV": 3.912923798580048e-09,
+      "Area_Max_Min_Ratio": 1.0000000178667652,
+      "Compactness_Min": 0.610803276075006,
+      "Compactness_Mean": 0.7558293607135733,
+      "Compactness_Median": 0.7433894119678781,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 14,
+          "max_relative_area_error": 1.3144407784437817e-08,
+          "min_compactness": 0.6108032760750017,
+          "mean_compactness": 0.7558293607135723,
+          "chosen_restart": 1,
+          "chosen_outer": 30,
+          "evaluations": 2572,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 26,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.5502659516656654
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 49,
+              "best_min_compactness": 0.5879867769178905
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 47,
+              "best_min_compactness": 0.5867707575654763
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.6107857772005463,
+            "mean_before": 0.7415512552202437,
+            "fixed_min_floor": 0.6107847772005462,
+            "min_after": 0.6108032760750017,
+            "mean_after": 0.7558293607135723,
+            "mean_gain": 0.014278105493328641,
+            "accepted": 38,
+            "trials": 370,
+            "evaluations": 1130,
+            "seconds": 16.642404400000004,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 9,
+                "min_compactness": 0.6108080843417548,
+                "mean_compactness": 0.747998840145555
+              },
+              {
+                "round": 2,
+                "accepted": 8,
+                "min_compactness": 0.6107877764625131,
+                "mean_compactness": 0.751258662496049
+              },
+              {
+                "round": 3,
+                "accepted": 9,
+                "min_compactness": 0.6109111999885783,
+                "mean_compactness": 0.7528530203517587
+              },
+              {
+                "round": 4,
+                "accepted": 12,
+                "min_compactness": 0.6108032760750017,
+                "mean_compactness": 0.7558293607135723
+              }
+            ]
+          },
+          "seconds": 39.743046899999996
+        }
+      ],
+      "Missing_Area_km2": 1.814129325782912e-05,
+      "Outside_Area_km2": 1.8971487811176654e-05,
+      "Overlap_Area_km2": 1.220703125e-10,
+      "Area_Sum_Difference_km2": 3.161310451105237e-05
+    },
+    {
+      "Sink_ID": "P8",
+      "Sink_Name": "鄂尔多斯盆地",
+      "Subsite_Count": 30,
+      "Original_Area_km2": 234603.25819509587,
+      "Retained_Area_km2": 234603.25819509575,
+      "Retained_Area_Ratio": 0.9999999999999996,
+      "Allocated_Total_CO2_t": 256499999999.99994,
+      "Allocated_Annual_Quota_t": 1282499999.84785,
+      "Parent_Max_Annual_Injection_t": 1282500000.0,
+      "Mainland_Max_Annual_Injection_t": 1282499999.9999993,
+      "Annual_Quota_Sum_Difference_t": -0.15214920043945312,
+      "Min_Area_km2": 7820.108575429863,
+      "Max_Area_km2": 7820.108619404292,
+      "Area_CV": 1.4691328044312906e-09,
+      "Area_Max_Min_Ratio": 1.0000000056232505,
+      "Compactness_Min": 0.598126620255586,
+      "Compactness_Mean": 0.8132819039346814,
+      "Compactness_Median": 0.8387532516708962,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 30,
+          "max_relative_area_error": 1.3678969068564584e-10,
+          "min_compactness": 0.5981266202555844,
+          "mean_compactness": 0.8132819039346809,
+          "chosen_restart": 2,
+          "chosen_outer": 30,
+          "evaluations": 3734,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.5058681904943227
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.5080473302108416
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 65,
+              "best_min_compactness": 0.5231493029846418
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.5981065909117602,
+            "mean_before": 0.8026823613623988,
+            "fixed_min_floor": 0.5981055909117602,
+            "min_after": 0.5981266202555844,
+            "mean_after": 0.8132819039346809,
+            "mean_gain": 0.010599542572282128,
+            "accepted": 102,
+            "trials": 732,
+            "evaluations": 2182,
+            "seconds": 85.0866287,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 27,
+                "min_compactness": 0.5984794767053995,
+                "mean_compactness": 0.8082241615169795
+              },
+              {
+                "round": 2,
+                "accepted": 26,
+                "min_compactness": 0.5984503351764088,
+                "mean_compactness": 0.8114634169574794
+              },
+              {
+                "round": 3,
+                "accepted": 27,
+                "min_compactness": 0.5981547973256484,
+                "mean_compactness": 0.8127542054265089
+              },
+              {
+                "round": 4,
+                "accepted": 22,
+                "min_compactness": 0.5981266202555844,
+                "mean_compactness": 0.8132819039346809
+              }
+            ]
+          },
+          "seconds": 145.11349760000002
+        }
+      ],
+      "Missing_Area_km2": 1.9473789275140015e-05,
+      "Outside_Area_km2": 1.9785082015022955e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": -2.7832196792587638e-05
+    },
+    {
+      "Sink_ID": "P9",
+      "Sink_Name": "塔里木盆地",
+      "Subsite_Count": 72,
+      "Original_Area_km2": 570380.7446072781,
+      "Retained_Area_km2": 570328.0338260982,
+      "Retained_Area_Ratio": 0.9999075866749039,
+      "Allocated_Total_CO2_t": 745731078142.1437,
+      "Allocated_Annual_Quota_t": 3728655390.3197126,
+      "Parent_Max_Annual_Injection_t": 3729000000.0,
+      "Mainland_Max_Annual_Injection_t": 3728655390.7107167,
+      "Annual_Quota_Sum_Difference_t": -0.3910040855407715,
+      "Min_Area_km2": 7921.222621581797,
+      "Max_Area_km2": 7921.222713046646,
+      "Area_CV": 1.9541596684920276e-09,
+      "Area_Max_Min_Ratio": 1.0000000115468095,
+      "Compactness_Min": 0.4951901858594273,
+      "Compactness_Mean": 0.8255910220103654,
+      "Compactness_Median": 0.8422065584030307,
+      "Compactness_Below_0_5_Count": 1,
+      "Partition_Diagnostics": [
+        {
+          "count": 72,
+          "max_relative_area_error": 6.608513736239274e-11,
+          "min_compactness": 0.49519018585943037,
+          "mean_compactness": 0.8255910220103656,
+          "chosen_restart": 1,
+          "chosen_outer": 6,
+          "evaluations": 4182,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 30,
+              "inner_iterations": 62,
+              "best_min_compactness": 0.43917682401274877
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 68,
+              "best_min_compactness": 0.45220623758351497
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.43689827692239325
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.49503863415403687,
+            "mean_before": 0.8050550106761558,
+            "fixed_min_floor": 0.4950376341540369,
+            "min_after": 0.49519018585943037,
+            "mean_after": 0.8255910220103656,
+            "mean_gain": 0.02053601133420979,
+            "accepted": 269,
+            "trials": 893,
+            "evaluations": 2614,
+            "seconds": 368.48657279999986,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 66,
+                "min_compactness": 0.4952772676799167,
+                "mean_compactness": 0.8121273496239798
+              },
+              {
+                "round": 2,
+                "accepted": 66,
+                "min_compactness": 0.4952839573462022,
+                "mean_compactness": 0.8185582679138359
+              },
+              {
+                "round": 3,
+                "accepted": 70,
+                "min_compactness": 0.4950713559451564,
+                "mean_compactness": 0.8229984107898123
+              },
+              {
+                "round": 4,
+                "accepted": 67,
+                "min_compactness": 0.49519018585943037,
+                "mean_compactness": 0.8255910220103656
+              }
+            ]
+          },
+          "seconds": 639.7098517000001
+        }
+      ],
+      "Missing_Area_km2": 3.6499197897880284e-05,
+      "Outside_Area_km2": 3.684710022242263e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": -5.980732385069132e-05
+    },
+    {
+      "Sink_ID": "P10",
+      "Sink_Name": "渤海湾盆地",
+      "Subsite_Count": 18,
+      "Original_Area_km2": 193827.62455733883,
+      "Retained_Area_km2": 141278.47721044524,
+      "Retained_Area_Ratio": 0.7288872137451785,
+      "Allocated_Total_CO2_t": 151681429180.3716,
+      "Allocated_Annual_Quota_t": 758407145.9247406,
+      "Parent_Max_Annual_Injection_t": 1040500000.0,
+      "Mainland_Max_Annual_Injection_t": 758407145.9018583,
+      "Annual_Quota_Sum_Difference_t": 0.02288222312927246,
+      "Min_Area_km2": 7724.39156595243,
+      "Max_Area_km2": 7864.355893478951,
+      "Area_CV": 0.005604233365392211,
+      "Area_Max_Min_Ratio": 1.0181197866953633,
+      "Compactness_Min": 0.19872646626769783,
+      "Compactness_Mean": 0.6755190224454898,
+      "Compactness_Median": 0.7566711048025798,
+      "Compactness_Below_0_5_Count": 3,
+      "Partition_Diagnostics": [
+        {
+          "count": 16,
+          "max_relative_area_error": 1.3133343301774403e-09,
+          "min_compactness": 0.19872646626769602,
+          "mean_compactness": 0.6900290982650819,
+          "chosen_restart": 1,
+          "chosen_outer": 27,
+          "evaluations": 2877,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 0,
+              "inner_iterations": 54,
+              "best_min_compactness": null
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 24,
+              "inner_iterations": 70,
+              "best_min_compactness": 0.12911431402276163
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 3,
+              "inner_iterations": 62,
+              "best_min_compactness": 0.12646533521251355
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.19871626695172043,
+            "mean_before": 0.6868957881443378,
+            "fixed_min_floor": 0.19871526695172043,
+            "min_after": 0.19872646626769602,
+            "mean_after": 0.6900290982650819,
+            "mean_gain": 0.003133310120744026,
+            "accepted": 38,
+            "trials": 431,
+            "evaluations": 1324,
+            "seconds": 26.828970300000037,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 8,
+                "min_compactness": 0.19875583251148432,
+                "mean_compactness": 0.6884841109529666
+              },
+              {
+                "round": 2,
+                "accepted": 10,
+                "min_compactness": 0.19873338597357645,
+                "mean_compactness": 0.6892718936131729
+              },
+              {
+                "round": 3,
+                "accepted": 10,
+                "min_compactness": 0.19871978573792365,
+                "mean_compactness": 0.6895575418833537
+              },
+              {
+                "round": 4,
+                "accepted": 10,
+                "min_compactness": 0.19872646626769602,
+                "mean_compactness": 0.6900290982650819
+              }
+            ]
+          },
+          "seconds": 61.071499299999914
+        },
+        {
+          "count": 2,
+          "max_relative_area_error": 1.4694157002281827e-09,
+          "min_compactness": 0.4348269042713008,
+          "mean_compactness": 0.5594384158887623,
+          "chosen_restart": 0,
+          "chosen_outer": 6,
+          "evaluations": 668,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 7,
+              "inner_iterations": 14,
+              "best_min_compactness": 0.4341655464498894
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 8,
+              "inner_iterations": 14,
+              "best_min_compactness": 0.4341650755842194
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 8,
+              "inner_iterations": 14,
+              "best_min_compactness": 0.4341634303318077
+            }
+          ],
+          "polish_accepted": 3,
+          "mean_optimization": {
+            "min_before": 0.43482534791862054,
+            "mean_before": 0.5594359385294072,
+            "fixed_min_floor": 0.43482434791862057,
+            "min_after": 0.4348269042713008,
+            "mean_after": 0.5594384158887623,
+            "mean_gain": 2.47735935510196e-06,
+            "accepted": 1,
+            "trials": 82,
+            "evaluations": 227,
+            "seconds": 0.25794310000014775,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 1,
+                "min_compactness": 0.4348269042713008,
+                "mean_compactness": 0.5594384158887623
+              },
+              {
+                "round": 2,
+                "accepted": 0,
+                "min_compactness": 0.4348269042713008,
+                "mean_compactness": 0.5594384158887623
+              },
+              {
+                "round": 3,
+                "accepted": 0,
+                "min_compactness": 0.4348269042713008,
+                "mean_compactness": 0.5594384158887623
+              },
+              {
+                "round": 4,
+                "accepted": 0,
+                "min_compactness": 0.4348269042713008,
+                "mean_compactness": 0.5594384158887623
+              }
+            ]
+          },
+          "seconds": 1.0399858000000677
+        }
+      ],
+      "Missing_Area_km2": 3.30902689996601e-05,
+      "Outside_Area_km2": 3.156347548899636e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": 4.2626343201845884e-06
+    },
+    {
+      "Sink_ID": "P11",
+      "Sink_Name": "准噶尔盆地",
+      "Subsite_Count": 18,
+      "Original_Area_km2": 138694.10189447773,
+      "Retained_Area_km2": 138694.10189447764,
+      "Retained_Area_Ratio": 0.9999999999999993,
+      "Allocated_Total_CO2_t": 197099999999.99988,
+      "Allocated_Annual_Quota_t": 985499999.7673174,
+      "Parent_Max_Annual_Injection_t": 985500000.0,
+      "Mainland_Max_Annual_Injection_t": 985499999.9999994,
+      "Annual_Quota_Sum_Difference_t": -0.2326819896697998,
+      "Min_Area_km2": 7705.227864868322,
+      "Max_Area_km2": 7705.227897144065,
+      "Area_CV": 1.4859080506609232e-09,
+      "Area_Max_Min_Ratio": 1.0000000041888109,
+      "Compactness_Min": 0.5739078743162391,
+      "Compactness_Mean": 0.7721383673430614,
+      "Compactness_Median": 0.8023166974837124,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 18,
+          "max_relative_area_error": 7.506217869490683e-12,
+          "min_compactness": 0.5739078743162366,
+          "mean_compactness": 0.7721383673430611,
+          "chosen_restart": 1,
+          "chosen_outer": 11,
+          "evaluations": 3008,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 3,
+              "inner_iterations": 57,
+              "best_min_compactness": 0.43251176590392065
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 12,
+              "inner_iterations": 60,
+              "best_min_compactness": 0.5023661017335337
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 2,
+              "inner_iterations": 61,
+              "best_min_compactness": 0.40902050007990254
+            }
+          ],
+          "polish_accepted": 4,
+          "mean_optimization": {
+            "min_before": 0.5737574146804596,
+            "mean_before": 0.7682453005331309,
+            "fixed_min_floor": 0.5737564146804596,
+            "min_after": 0.5739078743162366,
+            "mean_after": 0.7721383673430611,
+            "mean_gain": 0.003893066809930179,
+            "accepted": 22,
+            "trials": 551,
+            "evaluations": 1613,
+            "seconds": 32.5576403,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 5,
+                "min_compactness": 0.5739474088141593,
+                "mean_compactness": 0.7701038198067083
+              },
+              {
+                "round": 2,
+                "accepted": 4,
+                "min_compactness": 0.57394992667339,
+                "mean_compactness": 0.7706831019811207
+              },
+              {
+                "round": 3,
+                "accepted": 4,
+                "min_compactness": 0.5739540176182252,
+                "mean_compactness": 0.7711652530043539
+              },
+              {
+                "round": 4,
+                "accepted": 9,
+                "min_compactness": 0.5739078743162366,
+                "mean_compactness": 0.7721383673430611
+              }
+            ]
+          },
+          "seconds": 63.223551700000144
+        }
+      ],
+      "Missing_Area_km2": 2.0444941967253872e-05,
+      "Outside_Area_km2": 2.1442437425469235e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": -3.274640766903758e-05
+    },
+    {
+      "Sink_ID": "P13",
+      "Sink_Name": "松辽盆地",
+      "Subsite_Count": 33,
+      "Original_Area_km2": 258374.201419595,
+      "Retained_Area_km2": 258374.20141959493,
+      "Retained_Area_Ratio": 0.9999999999999998,
+      "Allocated_Total_CO2_t": 227799999999.99994,
+      "Allocated_Annual_Quota_t": 1139000000.0145001,
+      "Parent_Max_Annual_Injection_t": 1139000000.0,
+      "Mainland_Max_Annual_Injection_t": 1138999999.9999998,
+      "Annual_Quota_Sum_Difference_t": 0.01450037956237793,
+      "Min_Area_km2": 7829.518652425357,
+      "Max_Area_km2": 7829.527330605481,
+      "Area_CV": 1.966513387053457e-07,
+      "Area_Max_Min_Ratio": 1.0000011083925475,
+      "Compactness_Min": 0.5296420267010631,
+      "Compactness_Mean": 0.7943888193885214,
+      "Compactness_Median": 0.8193291055868027,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 33,
+          "max_relative_area_error": 7.782257773758516e-07,
+          "min_compactness": 0.5296420267010581,
+          "mean_compactness": 0.7943888193885217,
+          "chosen_restart": 1,
+          "chosen_outer": 30,
+          "evaluations": 3661,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 25,
+              "inner_iterations": 64,
+              "best_min_compactness": 0.4487059808906406
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 19,
+              "inner_iterations": 68,
+              "best_min_compactness": 0.4628042120053681
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 31,
+              "inner_iterations": 68,
+              "best_min_compactness": 0.45127781299573544
+            }
+          ],
+          "polish_accepted": 6,
+          "mean_optimization": {
+            "min_before": 0.5295935385067654,
+            "mean_before": 0.7815932790578698,
+            "fixed_min_floor": 0.5295925385067654,
+            "min_after": 0.5296420267010581,
+            "mean_after": 0.7943888193885217,
+            "mean_gain": 0.012795540330651889,
+            "accepted": 107,
+            "trials": 724,
+            "evaluations": 2119,
+            "seconds": 211.32957299999998,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 22,
+                "min_compactness": 0.5298217342731129,
+                "mean_compactness": 0.7859988677101256
+              },
+              {
+                "round": 2,
+                "accepted": 29,
+                "min_compactness": 0.5296381274662413,
+                "mean_compactness": 0.791294447548948
+              },
+              {
+                "round": 3,
+                "accepted": 27,
+                "min_compactness": 0.5297767535349308,
+                "mean_compactness": 0.7932855825604304
+              },
+              {
+                "round": 4,
+                "accepted": 29,
+                "min_compactness": 0.5296420267010581,
+                "mean_compactness": 0.7943888193885217
+              }
+            ]
+          },
+          "seconds": 313.1943878000002
+        }
+      ],
+      "Missing_Area_km2": 2.6270822446027766e-05,
+      "Outside_Area_km2": 2.7350969904903954e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": 3.2892858143895864e-06
+    },
+    {
+      "Sink_ID": "P14",
+      "Sink_Name": "海拉尔盆地",
+      "Subsite_Count": 10,
+      "Original_Area_km2": 78494.53791093458,
+      "Retained_Area_km2": 78375.57259604277,
+      "Retained_Area_Ratio": 0.998484412825937,
+      "Allocated_Total_CO2_t": 16075599046.497587,
+      "Allocated_Annual_Quota_t": 80377995.25048111,
+      "Parent_Max_Annual_Injection_t": 80500000.00000001,
+      "Mainland_Max_Annual_Injection_t": 80377995.23248795,
+      "Annual_Quota_Sum_Difference_t": 0.01799316704273224,
+      "Min_Area_km2": 7837.557247124679,
+      "Max_Area_km2": 7837.557273879655,
+      "Area_CV": 1.1509528621114738e-09,
+      "Area_Max_Min_Ratio": 1.0000000034136882,
+      "Compactness_Min": 0.7126222734836276,
+      "Compactness_Mean": 0.7704854220571423,
+      "Compactness_Median": 0.7783236225133461,
+      "Compactness_Below_0_5_Count": 0,
+      "Partition_Diagnostics": [
+        {
+          "count": 10,
+          "max_relative_area_error": 6.440834532384088e-10,
+          "min_compactness": 0.7126222734836303,
+          "mean_compactness": 0.7704854220571404,
+          "chosen_restart": 2,
+          "chosen_outer": 13,
+          "evaluations": 2401,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 31,
+              "inner_iterations": 55,
+              "best_min_compactness": 0.6121059146573262
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 45,
+              "best_min_compactness": 0.6292104633776092
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 30,
+              "inner_iterations": 53,
+              "best_min_compactness": 0.6707323008476559
+            }
+          ],
+          "polish_accepted": 7,
+          "mean_optimization": {
+            "min_before": 0.7122961195119604,
+            "mean_before": 0.7546289400700091,
+            "fixed_min_floor": 0.7122951195119603,
+            "min_after": 0.7126222734836303,
+            "mean_after": 0.7704854220571404,
+            "mean_gain": 0.0158564819871313,
+            "accepted": 28,
+            "trials": 278,
+            "evaluations": 876,
+            "seconds": 15.603591499999993,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 7,
+                "min_compactness": 0.7134453582325953,
+                "mean_compactness": 0.7615559467598023
+              },
+              {
+                "round": 2,
+                "accepted": 6,
+                "min_compactness": 0.7123846659771599,
+                "mean_compactness": 0.7655364487781714
+              },
+              {
+                "round": 3,
+                "accepted": 7,
+                "min_compactness": 0.7129579940127271,
+                "mean_compactness": 0.7682873727191951
+              },
+              {
+                "round": 4,
+                "accepted": 8,
+                "min_compactness": 0.7126222734836303,
+                "mean_compactness": 0.7704854220571404
+              }
+            ]
+          },
+          "seconds": 44.23508119999997
+        }
+      ],
+      "Missing_Area_km2": 1.2823031305176591e-05,
+      "Outside_Area_km2": 1.2872932153942586e-05,
+      "Overlap_Area_km2": 0.0,
+      "Area_Sum_Difference_km2": 1.754490949679166e-05
+    },
+    {
+      "Sink_ID": "P15",
+      "Sink_Name": "二连盆地",
+      "Subsite_Count": 23,
+      "Original_Area_km2": 178442.16821728984,
+      "Retained_Area_km2": 178342.35087997836,
+      "Retained_Area_Ratio": 0.9994406179979278,
+      "Allocated_Total_CO2_t": 84952452529.82388,
+      "Allocated_Annual_Quota_t": 424762262.60229075,
+      "Parent_Max_Annual_Injection_t": 425000000.0,
+      "Mainland_Max_Annual_Injection_t": 424762262.6491193,
+      "Annual_Quota_Sum_Difference_t": -0.04682856798171997,
+      "Min_Area_km2": 7754.014108186915,
+      "Max_Area_km2": 7754.017940194028,
+      "Area_CV": 8.326371427420334e-08,
+      "Area_Max_Min_Ratio": 1.000000494196562,
+      "Compactness_Min": 0.369381465229911,
+      "Compactness_Mean": 0.7327489876757703,
+      "Compactness_Median": 0.7847321794044682,
+      "Compactness_Below_0_5_Count": 1,
+      "Partition_Diagnostics": [
+        {
+          "count": 23,
+          "max_relative_area_error": 3.48248612613844e-07,
+          "min_compactness": 0.3693814652299134,
+          "mean_compactness": 0.7327489876757697,
+          "chosen_restart": 0,
+          "chosen_outer": 2,
+          "evaluations": 3359,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 30,
+              "inner_iterations": 68,
+              "best_min_compactness": 0.3536770534498061
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 31,
+              "inner_iterations": 67,
+              "best_min_compactness": 0.3509697556688788
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 24,
+              "inner_iterations": 57,
+              "best_min_compactness": 0.3511126018110227
+            }
+          ],
+          "polish_accepted": 8,
+          "mean_optimization": {
+            "min_before": 0.3693646882837072,
+            "mean_before": 0.7097313664048472,
+            "fixed_min_floor": 0.36936368828370725,
+            "min_after": 0.3693814652299134,
+            "mean_after": 0.7327489876757697,
+            "mean_gain": 0.02301762127092244,
+            "accepted": 70,
+            "trials": 597,
+            "evaluations": 1840,
+            "seconds": 118.25639300000012,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 17,
+                "min_compactness": 0.36936373296266417,
+                "mean_compactness": 0.717483337194491
+              },
+              {
+                "round": 2,
+                "accepted": 10,
+                "min_compactness": 0.36949621524514226,
+                "mean_compactness": 0.7190051103219532
+              },
+              {
+                "round": 3,
+                "accepted": 22,
+                "min_compactness": 0.36937779562686274,
+                "mean_compactness": 0.7312885016539564
+              },
+              {
+                "round": 4,
+                "accepted": 21,
+                "min_compactness": 0.3693814652299134,
+                "mean_compactness": 0.7327489876757697
+              }
+            ]
+          },
+          "seconds": 228.33890469999983
+        }
+      ],
+      "Missing_Area_km2": 3.025080653892263e-05,
+      "Outside_Area_km2": 2.942916457167316e-05,
+      "Overlap_Area_km2": 7.62939453125e-10,
+      "Area_Sum_Difference_km2": -1.9661674741655588e-05
+    },
+    {
+      "Sink_ID": "P16",
+      "Sink_Name": "吐鲁番-哈密盆地",
+      "Subsite_Count": 10,
+      "Original_Area_km2": 50742.49247494312,
+      "Retained_Area_km2": 50742.49247494312,
+      "Retained_Area_Ratio": 1.0,
+      "Allocated_Total_CO2_t": 54300000000.0,
+      "Allocated_Annual_Quota_t": 271499999.95392317,
+      "Parent_Max_Annual_Injection_t": 271500000.0,
+      "Mainland_Max_Annual_Injection_t": 271500000.0,
+      "Annual_Quota_Sum_Difference_t": -0.046076834201812744,
+      "Min_Area_km2": 5074.249236796993,
+      "Max_Area_km2": 5074.249256536876,
+      "Area_CV": 1.2752215593542983e-09,
+      "Area_Max_Min_Ratio": 1.0000000038902077,
+      "Compactness_Min": 0.4800596211294408,
+      "Compactness_Mean": 0.7034831826154007,
+      "Compactness_Median": 0.7010546277471039,
+      "Compactness_Below_0_5_Count": 1,
+      "Partition_Diagnostics": [
+        {
+          "count": 10,
+          "max_relative_area_error": 1.596711651785654e-11,
+          "min_compactness": 0.4800596211294436,
+          "mean_compactness": 0.7034831826154013,
+          "chosen_restart": 1,
+          "chosen_outer": 27,
+          "evaluations": 2167,
+          "restarts": [
+            {
+              "restart": 0,
+              "valid_iterations": 30,
+              "inner_iterations": 64,
+              "best_min_compactness": 0.4794015123293871
+            },
+            {
+              "restart": 1,
+              "valid_iterations": 26,
+              "inner_iterations": 57,
+              "best_min_compactness": 0.48005962087322485
+            },
+            {
+              "restart": 2,
+              "valid_iterations": 9,
+              "inner_iterations": 71,
+              "best_min_compactness": 0.4800471074717072
+            }
+          ],
+          "polish_accepted": 6,
+          "mean_optimization": {
+            "min_before": 0.4800596211294443,
+            "mean_before": 0.6955423457665948,
+            "fixed_min_floor": 0.4800586211294443,
+            "min_after": 0.4800596211294436,
+            "mean_after": 0.7034831826154013,
+            "mean_gain": 0.007940836848806532,
+            "accepted": 26,
+            "trials": 262,
+            "evaluations": 747,
+            "seconds": 11.763234099999863,
+            "history": [
+              {
+                "round": 1,
+                "accepted": 6,
+                "min_compactness": 0.4800596211294443,
+                "mean_compactness": 0.6995814827312531
+              },
+              {
+                "round": 2,
+                "accepted": 6,
+                "min_compactness": 0.48005962112944456,
+                "mean_compactness": 0.7022302246546976
+              },
+              {
+                "round": 3,
+                "accepted": 6,
+                "min_compactness": 0.4800596211294437,
+                "mean_compactness": 0.7031290846548598
+              },
+              {
+                "round": 4,
+                "accepted": 8,
+                "min_compactness": 0.4800596211294436,
+                "mean_compactness": 0.7034831826154013
+              }
+            ]
+          },
+          "seconds": 35.05070740000019
+        }
+      ],
+      "Missing_Area_km2": 1.6499720002257192e-05,
+      "Outside_Area_km2": 1.6632910247778244e-05,
+      "Overlap_Area_km2": 6.103515625e-11,
+      "Area_Sum_Difference_km2": -8.611619705334306e-06
+    }
+  ],
+  "OGC_Geometry_Issue_Count": 0,
+  "Saved_Geometry_Area_Check": "passed"
+}

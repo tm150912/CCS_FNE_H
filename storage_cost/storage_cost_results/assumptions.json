@@ -1,0 +1,1051 @@
+{
+  "description_zh": "基于NETL工作簿和本地子场数据的统一工程情景估算，不是各子场实测造价。",
+  "price_basis": "constant 2020 USD",
+  "discounting": false,
+  "capital_annualization": false,
+  "source_subsite_count": 271,
+  "count_note_zh": "本批覆盖源CSV及空间审计中的全部271个子场。",
+  "design_basis": "quota",
+  "design_note_zh": "sink.xlsx中最大年注入量对应原盆地总面积，先按大陆交集/原盆地面积折减，再按子场/大陆交集面积分配，作为费用设计目标；30年项目，不是200年寿命。",
+  "scope_excluded": [
+    "water management (workbook OFF)",
+    "external feeder pipeline (network boundary)",
+    "operating eddy startup row255 (unresolved overlap with row281)",
+    "trust/escrow/tax cash flows and endogenous financing"
+  ],
+  "nonenergy_fees_note_zh": "孔隙使用、运营监管、ERR和长期托管按吨费采用NETL美国类比情景，不代表中国必缴收费。",
+  "pore_fee_usd2008_per_t": 0.25,
+  "oversight_fee_usd2008_per_t": 0.01,
+  "ERR_fee_usd2008_per_t": 0.75,
+  "stewardship_fee_usd2008_per_t": 0.07,
+  "storage_cost_schema_version": 3,
+  "cost_schedule_years": 30,
+  "lifecycle_notes": {
+    "price_basis": "Raw USD2008 cash amounts; no discounting, annualization or CRF",
+    "offsets": "0 = final injection year; 1..pisc_years = post-injection years",
+    "end_ages": "Site operating ages 1..30; downstream must reject ages outside this range",
+    "monitoring_extent": "Deep monitoring wells and 3-D area freeze at operating age at shutdown",
+    "well_basis": "Each built injection well closes at offset0; its groundwater/vadose wells remain until PISC end",
+    "pisc_equipment": "Row256 is included as the source PISC first-period equipment allocation; no claim of independently verified replacement need",
+    "remediation": "All fixed-design old-well remediation not yet paid in operations is settled at offset0",
+    "disabled_or_zero_rows": [
+      107,
+      109,
+      111,
+      113,
+      143,
+      147,
+      151,
+      155,
+      159,
+      163,
+      167,
+      171,
+      175,
+      179,
+      183,
+      187,
+      195,
+      199,
+      204,
+      208,
+      212,
+      216,
+      220,
+      224,
+      228,
+      232,
+      236,
+      240,
+      244,
+      248,
+      260,
+      264,
+      268,
+      272,
+      276,
+      280,
+      286
+    ],
+    "zero_quantity_rows": [
+      120,
+      129,
+      427,
+      440,
+      449,
+      460
+    ],
+    "source_pisc_start_year": 37
+  },
+  "closure_basis": "All opened sites and injection wells stop at the common network horizon; PISC follows for the workbook duration.",
+  "lifecycle_cashflow_basis": "Pre-injection Expense uses offsets from opening; all terminal CAPEX/OPEX is paid at its event year, without new loans. Operating capital retains CRF and horizon debt settlement.",
+  "model_csv_columns": [
+    "Subsite_ID",
+    "Max_Well_Num",
+    "Well_Annual_Capacity_t",
+    "Area_km2",
+    "Longitude",
+    "Latitude",
+    "F_r_USD2020",
+    "F_w_USD2020_per_well",
+    "V_r_USD2020_per_tCO2",
+    "M_r_USD2020_per_year",
+    "M_w_USD2020_per_well_year",
+    "Site_Extra_CAPEX_USD2020_by_age",
+    "Site_Extra_OPEX_USD2020_by_age",
+    "Well_Extra_CAPEX_USD2020_by_age",
+    "Well_Extra_OPEX_USD2020_by_age",
+    "Storage_Cost_Schema_Version",
+    "Cost_Schedule_Years",
+    "Storage_Lifecycle_USD2020"
+  ],
+  "coordinate_note_zh": "Longitude、Latitude继承子场源表，单位为度，坐标系为WGS84（EPSG:4326）；所有子场统一在母盆地局部LAEA投影中使用ArcPy labelPoint，经严格区内检查后转为经纬度，Point_Method均为interior_label_point。",
+  "capacity_input_note_zh": "CO2_EWR(tonne)为原完整盆地最大年注入量；大陆内上限=CO2_EWR*大陆交集面积/原盆地面积；子场上限=大陆内上限*子场面积/大陆交集面积。Well_Annual_Capacity_t=365*min(地层日能力,3660)，子场继承母盆地单井能力，Max_Well_Num=floor(子场最大年量/母盆地单井最大年能力)。",
+  "capacity_basis": {
+    "source": "sink.xlsx, sheet sink; CO2_EWR(tonne) is t/year for the full original basin area, as specified by user",
+    "mainland_reduction": "CO2_EWR(tonne) * Parent_Retained_Area_km2 / Parent_Original_Area_km2",
+    "allocation": "mainland maximum annual injection * subsite Area_km2 / Parent_Retained_Area_km2; equivalently CO2_EWR(tonne) * subsite Area_km2 / Parent_Original_Area_km2; no child-area-sum normalization",
+    "area_definition": "Parent_Retained_Area_km2 is the geodesic area of basin boundary intersected with the largest mainland polygon from China_boundary",
+    "area_tolerance_km2": 0.02,
+    "well_annual_formula": "365 * min(Law-Bachu formation daily rate, 3660 t/day)",
+    "well_limit_formula": "floor((mainland-reduced basin maximum annual injection * subsite area / mainland-intersection area) / parent well maximum annual injection)",
+    "availability": "365 days/year at maximum rate; engineering upper bound, not measured injectivity",
+    "design_redundancy": "Peak/average=1.25 and spare wells=10% remain cost-design margins only; not reductions to maximum well capacity",
+    "integer_rounding": "Floor each subsite's unrounded ratio; fractional-well remainder is not redistributed and is reported in subsite_capacity.csv"
+  },
+  "basin_capacities": {
+    "P1": {
+      "Sink_ID": "P1",
+      "Sink_Name": "四川盆地",
+      "Basin_Max_Annual_Injection_t": 388000000.0,
+      "Mainland_Max_Annual_Injection_t": 388000000.00000024,
+      "Well_Annual_Capacity_t": 632329.5024371333,
+      "Formation_Daily_Capacity_t": 1732.4095957181735,
+      "Well_Daily_Capacity_t": 1732.4095957181735,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.05,
+      "Permeability_mD": 10.0,
+      "Storage_Coefficient": 0.0456,
+      "Subsite_Count": 26,
+      "Parent_Original_Area_km2": 203596.3366683852,
+      "Parent_Retained_Area_km2": 203596.3366683853,
+      "Retained_Area_Ratio": 1.0000000000000007
+    },
+    "P2": {
+      "Sink_ID": "P2",
+      "Sink_Name": "江汉盆地",
+      "Basin_Max_Annual_Injection_t": 264000000.0,
+      "Mainland_Max_Annual_Injection_t": 263999999.99999988,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 38979.21590365891,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 150.0,
+      "Porosity_fraction": 0.2,
+      "Permeability_mD": 450.0,
+      "Storage_Coefficient": 0.06,
+      "Subsite_Count": 4,
+      "Parent_Original_Area_km2": 31024.761081728237,
+      "Parent_Retained_Area_km2": 31024.761081728222,
+      "Retained_Area_Ratio": 0.9999999999999996
+    },
+    "P3": {
+      "Sink_ID": "P3",
+      "Sink_Name": "南襄盆地",
+      "Basin_Max_Annual_Injection_t": 37500000.0,
+      "Mainland_Max_Annual_Injection_t": 37500000.00000003,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 8662.047978590868,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 100.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 150.0,
+      "Storage_Coefficient": 0.0679,
+      "Subsite_Count": 2,
+      "Parent_Original_Area_km2": 14367.40678992597,
+      "Parent_Retained_Area_km2": 14367.406789925983,
+      "Retained_Area_Ratio": 1.0000000000000009
+    },
+    "P4": {
+      "Sink_ID": "P4",
+      "Sink_Name": "苏北盆地",
+      "Basin_Max_Annual_Injection_t": 449500000.0,
+      "Mainland_Max_Annual_Injection_t": 290405005.50800097,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 12993.0719678863,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.2,
+      "Permeability_mD": 75.0,
+      "Storage_Coefficient": 0.046,
+      "Subsite_Count": 5,
+      "Parent_Original_Area_km2": 51881.21631520458,
+      "Parent_Retained_Area_km2": 33518.4981307648,
+      "Retained_Area_Ratio": 0.646062303688545
+    },
+    "P5": {
+      "Sink_ID": "P5",
+      "Sink_Name": "河淮盆地",
+      "Basin_Max_Annual_Injection_t": 890000000.0,
+      "Mainland_Max_Annual_Injection_t": null,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 25986.1439357726,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.2,
+      "Permeability_mD": 150.0,
+      "Storage_Coefficient": 0.0613,
+      "Subsite_Count": 0,
+      "Parent_Original_Area_km2": null,
+      "Parent_Retained_Area_km2": null,
+      "Retained_Area_Ratio": null
+    },
+    "P6": {
+      "Sink_ID": "P6",
+      "Sink_Name": "沁水盆地",
+      "Basin_Max_Annual_Injection_t": 145000000.0,
+      "Mainland_Max_Annual_Injection_t": 145000000.00000012,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 34648.19191436347,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 200.0,
+      "Storage_Coefficient": 0.0613,
+      "Subsite_Count": 6,
+      "Parent_Original_Area_km2": 46006.30292966634,
+      "Parent_Retained_Area_km2": 46006.30292966637,
+      "Retained_Area_Ratio": 1.0000000000000009
+    },
+    "P7": {
+      "Sink_ID": "P7",
+      "Sink_Name": "柴达木盆地",
+      "Basin_Max_Annual_Injection_t": 107500000.0,
+      "Mainland_Max_Annual_Injection_t": 107500000.00000015,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 7218.37331549239,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 50.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 250.0,
+      "Storage_Coefficient": 0.0613,
+      "Subsite_Count": 14,
+      "Parent_Original_Area_km2": 111827.08961545909,
+      "Parent_Retained_Area_km2": 111827.08961545925,
+      "Retained_Area_Ratio": 1.0000000000000013
+    },
+    "P8": {
+      "Sink_ID": "P8",
+      "Sink_Name": "鄂尔多斯盆地",
+      "Basin_Max_Annual_Injection_t": 1282500000.0,
+      "Mainland_Max_Annual_Injection_t": 1282499999.9999995,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 8662.047978590868,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 50.0,
+      "Storage_Coefficient": 0.0617,
+      "Subsite_Count": 30,
+      "Parent_Original_Area_km2": 234603.25819509587,
+      "Parent_Retained_Area_km2": 234603.25819509575,
+      "Retained_Area_Ratio": 0.9999999999999996
+    },
+    "P9": {
+      "Sink_ID": "P9",
+      "Sink_Name": "塔里木盆地",
+      "Basin_Max_Annual_Injection_t": 3729000000.0,
+      "Mainland_Max_Annual_Injection_t": 3728655390.7107167,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 25986.1439357726,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 150.0,
+      "Storage_Coefficient": 0.1085,
+      "Subsite_Count": 72,
+      "Parent_Original_Area_km2": 570380.7446072781,
+      "Parent_Retained_Area_km2": 570328.0338260982,
+      "Retained_Area_Ratio": 0.9999075866749039
+    },
+    "P10": {
+      "Sink_ID": "P10",
+      "Sink_Name": "渤海湾盆地",
+      "Basin_Max_Annual_Injection_t": 1040500000.0,
+      "Mainland_Max_Annual_Injection_t": 758407145.9018582,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 115493.97304787824,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 200.0,
+      "Porosity_fraction": 0.2,
+      "Permeability_mD": 1000.0,
+      "Storage_Coefficient": 0.0791,
+      "Subsite_Count": 18,
+      "Parent_Original_Area_km2": 193827.62455733883,
+      "Parent_Retained_Area_km2": 141278.47721044524,
+      "Retained_Area_Ratio": 0.7288872137451785
+    },
+    "P11": {
+      "Sink_ID": "P11",
+      "Sink_Name": "准噶尔盆地",
+      "Basin_Max_Annual_Injection_t": 985500000.0,
+      "Mainland_Max_Annual_Injection_t": 985499999.9999993,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 12993.0719678863,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 75.0,
+      "Storage_Coefficient": 0.0619,
+      "Subsite_Count": 18,
+      "Parent_Original_Area_km2": 138694.10189447773,
+      "Parent_Retained_Area_km2": 138694.10189447764,
+      "Retained_Area_Ratio": 0.9999999999999993
+    },
+    "P12": {
+      "Sink_ID": "P12",
+      "Sink_Name": "三江盆地",
+      "Basin_Max_Annual_Injection_t": 224500000.0,
+      "Mainland_Max_Annual_Injection_t": null,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 28873.49326196956,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 200.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 250.0,
+      "Storage_Coefficient": 0.0523,
+      "Subsite_Count": 0,
+      "Parent_Original_Area_km2": null,
+      "Parent_Retained_Area_km2": null,
+      "Retained_Area_Ratio": null
+    },
+    "P13": {
+      "Sink_ID": "P13",
+      "Sink_Name": "松辽盆地",
+      "Basin_Max_Annual_Injection_t": 1139000000.0,
+      "Mainland_Max_Annual_Injection_t": 1138999999.9999998,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 28873.49326196956,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 200.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 250.0,
+      "Storage_Coefficient": 0.0679,
+      "Subsite_Count": 33,
+      "Parent_Original_Area_km2": 258374.201419595,
+      "Parent_Retained_Area_km2": 258374.20141959493,
+      "Retained_Area_Ratio": 0.9999999999999998
+    },
+    "P14": {
+      "Sink_ID": "P14",
+      "Sink_Name": "海拉尔盆地",
+      "Basin_Max_Annual_Injection_t": 80500000.00000001,
+      "Mainland_Max_Annual_Injection_t": 80377995.23248795,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 57746.98652393912,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 100.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 1000.0,
+      "Storage_Coefficient": 0.0679,
+      "Subsite_Count": 10,
+      "Parent_Original_Area_km2": 78494.53791093458,
+      "Parent_Retained_Area_km2": 78375.57259604277,
+      "Retained_Area_Ratio": 0.998484412825937
+    },
+    "P15": {
+      "Sink_ID": "P15",
+      "Sink_Name": "二连盆地",
+      "Basin_Max_Annual_Injection_t": 425000000.0,
+      "Mainland_Max_Annual_Injection_t": 424762262.6491193,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 8662.047978590868,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 200.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 75.0,
+      "Storage_Coefficient": 0.0619,
+      "Subsite_Count": 23,
+      "Parent_Original_Area_km2": 178442.16821728984,
+      "Parent_Retained_Area_km2": 178342.35087997836,
+      "Retained_Area_Ratio": 0.9994406179979278
+    },
+    "P16": {
+      "Sink_ID": "P16",
+      "Sink_Name": "吐鲁番-哈密盆地",
+      "Basin_Max_Annual_Injection_t": 271500000.0,
+      "Mainland_Max_Annual_Injection_t": 271500000.0,
+      "Well_Annual_Capacity_t": 1335900.0,
+      "Formation_Daily_Capacity_t": 86620.47978590868,
+      "Well_Daily_Capacity_t": 3660.0,
+      "Mechanical_Daily_Capacity_t": 3660.0,
+      "Reservoir_Delta_Pressure_MPa": 2.8820264,
+      "Net_Sand_Thickness_m": 300.0,
+      "Porosity_fraction": 0.15,
+      "Permeability_mD": 500.0,
+      "Storage_Coefficient": 0.0679,
+      "Subsite_Count": 10,
+      "Parent_Original_Area_km2": 50742.49247494312,
+      "Parent_Retained_Area_km2": 50742.49247494312,
+      "Retained_Area_Ratio": 1.0
+    }
+  },
+  "schedule_fields": {
+    "Site_Extra_CAPEX_USD2020_by_age": "site_extra_capital_age_usd2008",
+    "Site_Extra_OPEX_USD2020_by_age": "site_extra_opex_age_usd2008",
+    "Well_Extra_CAPEX_USD2020_by_age": "well_extra_capital_age_usd2008",
+    "Well_Extra_OPEX_USD2020_by_age": "well_extra_opex_age_usd2008"
+  },
+  "operations_notes": {
+    "price_basis": "USD2008; READ_ME_FIRST!C64; no discounting or annualization",
+    "ages": "1..30; site age for site profiles, injection-well cohort age for well profiles",
+    "basic_om_boundary": "All constant annual Expense: equipment/well maintenance, baseline monitoring, reporting, analyses and annual injection MIT. Only increments/events remain in extra profiles.",
+    "later_monitoring": "Design plume growth; later construction, maintenance and sampling increments in site extras; deep-monitoring tests follow source site-age schedule",
+    "initial_boundary": "Upfront Capital and Expense are separated by the site/engineering modules; initial monitor wells and row48 full design are not repeated in operating profiles",
+    "plan_boundary": "Rows106/108/110 initial updates overlap permit rows77/78/81; only ages6/11/16/21/26 added",
+    "plan_scaling": "Activity_Inputs!AP24 labels site hours and AQ24 labels per-injection-well hours; AQ28:AQ30 are charged to each well, whereas the legacy backend simply adds those hours once",
+    "eddy_boundary": "Row255 remains excluded under the existing overlap assumption with row281; source notes do not prove asset equivalence, so this boundary remains unresolved",
+    "excluded_startup_rows": [
+      255
+    ],
+    "excluded_rows": [
+      116,
+      146,
+      170,
+      459,
+      467,
+      468
+    ],
+    "excluded_scope": [
+      "post-injection and closure handled separately",
+      "optional old-well aerial surveys",
+      "water management",
+      "external feeder pipeline charged to network"
+    ],
+    "old_well_remediation": "Fixed design-pressure footprint times NETL deep-well density, rounded down; six integer batches at ages1/6/11/16/21/26 remediate every analogue old well once. Any outstanding inventory at early closure is returned for terminal settlement.",
+    "post_injection_plan_report": "Row114 occurs during operations every five years; its title does not make it a post-injection cash flow",
+    "disabled_or_zero_rows": [
+      142,
+      150,
+      154,
+      158,
+      162,
+      166,
+      174,
+      178,
+      182,
+      186,
+      194,
+      198,
+      203,
+      207,
+      211,
+      215,
+      219,
+      223,
+      227,
+      231,
+      235,
+      239,
+      243,
+      247,
+      263,
+      267,
+      271,
+      275,
+      279,
+      282,
+      285,
+      448,
+      454,
+      455,
+      456,
+      457
+    ],
+    "zero_quantity_rows": [
+      119,
+      128,
+      426,
+      439,
+      448
+    ],
+    "fee_localization": "0.25+0.07+0.01+0.75 USD2008/t is the selected NETL US analogue; not a China statutory fee",
+    "tracer_flow_proxy": "One average-flow day per year per built injection well, using design flow / active design wells / 365; text placeholder has no usable cached numeric value",
+    "original_classification": "Original Capital/Expense and row-specific process/project loading preserved"
+  },
+  "engineering_constants": {
+    "top_depth_ft": 5500.0,
+    "rathole_ft": 50.0,
+    "surface_temperature_f": 59.0,
+    "temperature_gradient_f_per_100ft": 1.37,
+    "hydrostatic_gradient_psi_per_ft": 0.464,
+    "lithostatic_gradient_psi_per_ft": 1.0,
+    "fracture_pressure_fraction": 0.6,
+    "max_injection_fracture_fraction": 0.9,
+    "vertical_horizontal_permeability_ratio": 0.3,
+    "reservoir_density_kg_m3": 670.7896933974779,
+    "reservoir_viscosity_cp": 0.05685813249316676,
+    "law_bachu_coefficient": 0.0208,
+    "mechanical_daily_t": 3660.0,
+    "peak_average_ratio": 1.25,
+    "spare_well_fraction": 0.1,
+    "minimum_built_wells": 4,
+    "injection_years": 30.0,
+    "drilling_curve": "US_total_onshore",
+    "drilling_localization_factor": 1.0,
+    "drilling_2006_to_2008_factor": 1.025625,
+    "capital_contingency_fraction": 0.15,
+    "pump_density_kg_m3": 923.2193909657408,
+    "pump_efficiency": 0.75,
+    "pump_delta_mpa": 6.89475729,
+    "pump_fixed_usd2008": 87000.0,
+    "pump_usd2008_per_kw": 1400.0,
+    "wells_per_header": 10,
+    "header_usd2008": 200000.0,
+    "branch_radius_multiplier": 0.333,
+    "building_usd2008": 200000.0,
+    "control_usd2008": 120000.0,
+    "road_length_mile": 0.25,
+    "road_usd2008_per_mile": 1000000.0,
+    "custody_gauge_usd2008": 250000.0
+  },
+  "constant_sources": {
+    "top_depth_ft": "Geol Sal!D34 (Woodbine reference, not local depth)",
+    "rathole_ft": "Geo-Activity Interaction!E26",
+    "surface_temperature_f": "Geol Sal!D185",
+    "temperature_gradient_f_per_100ft": "Geol Sal!D186",
+    "hydrostatic_gradient_psi_per_ft": "Geol Sal!D188",
+    "lithostatic_gradient_psi_per_ft": "Geol Sal!D187",
+    "fracture_pressure_fraction": "Geol Sal!D189",
+    "max_injection_fracture_fraction": "Geol Sal!D326",
+    "vertical_horizontal_permeability_ratio": "Geol Sal!D190",
+    "reservoir_density_kg_m3": "Geol Sal!D360 cached reference property",
+    "reservoir_viscosity_cp": "Geol Sal!D502 cached reference property",
+    "law_bachu_coefficient": "Geol Sal!D505",
+    "mechanical_daily_t": "Geol Sal!D324",
+    "peak_average_ratio": "Geol Sal!D474",
+    "spare_well_fraction": "Geol Sal!D330",
+    "minimum_built_wells": "Geol Sal!D329",
+    "injection_years": "Geol Sal!D471",
+    "drilling_curve": "Drilling Costs!H48:J48; Texas check H12:J12",
+    "drilling_localization_factor": "Scenario assumption; no China calibration",
+    "drilling_2006_to_2008_factor": "Drilling Costs!BI8/BI4, original legacy factor",
+    "capital_contingency_fraction": "Key_Inputs!AA33; Back-End_Cost Items!AQ",
+    "pump_density_kg_m3": "Surf Eq Cost!D46 cached reference property",
+    "pump_efficiency": "Surf Eq Cost!D47",
+    "pump_delta_mpa": "Surf Eq Cost!D44-D42",
+    "pump_fixed_usd2008": "Surf Eq Cost!D50",
+    "pump_usd2008_per_kw": "Surf Eq Cost!D51",
+    "wells_per_header": "Surf Eq Cost!D71 formula",
+    "header_usd2008": "Surf Eq Cost!D72",
+    "branch_radius_multiplier": "Surf Eq Cost!D87",
+    "building_usd2008": "Surf Eq Cost!D102",
+    "control_usd2008": "Surf Eq Cost!D113",
+    "road_length_mile": "Surf Eq Cost!D124",
+    "road_usd2008_per_mile": "Surf Eq Cost!D125",
+    "custody_gauge_usd2008": "Surf Eq Cost!D138"
+  },
+  "engineering_notes": {
+    "constants": {
+      "top_depth_ft": 5500.0,
+      "rathole_ft": 50.0,
+      "surface_temperature_f": 59.0,
+      "temperature_gradient_f_per_100ft": 1.37,
+      "hydrostatic_gradient_psi_per_ft": 0.464,
+      "lithostatic_gradient_psi_per_ft": 1.0,
+      "fracture_pressure_fraction": 0.6,
+      "max_injection_fracture_fraction": 0.9,
+      "vertical_horizontal_permeability_ratio": 0.3,
+      "reservoir_density_kg_m3": 670.7896933974779,
+      "reservoir_viscosity_cp": 0.05685813249316676,
+      "law_bachu_coefficient": 0.0208,
+      "mechanical_daily_t": 3660.0,
+      "peak_average_ratio": 1.25,
+      "spare_well_fraction": 0.1,
+      "minimum_built_wells": 4,
+      "injection_years": 30.0,
+      "drilling_curve": "US_total_onshore",
+      "drilling_localization_factor": 1.0,
+      "drilling_2006_to_2008_factor": 1.025625,
+      "capital_contingency_fraction": 0.15,
+      "pump_density_kg_m3": 923.2193909657408,
+      "pump_efficiency": 0.75,
+      "pump_delta_mpa": 6.89475729,
+      "pump_fixed_usd2008": 87000.0,
+      "pump_usd2008_per_kw": 1400.0,
+      "wells_per_header": 10,
+      "header_usd2008": 200000.0,
+      "branch_radius_multiplier": 0.333,
+      "building_usd2008": 200000.0,
+      "control_usd2008": 120000.0,
+      "road_length_mile": 0.25,
+      "road_usd2008_per_mile": 1000000.0,
+      "custody_gauge_usd2008": 250000.0
+    },
+    "overrides": {},
+    "source_cells": {
+      "top_depth_ft": "Geol Sal!D34 (Woodbine reference, not local depth)",
+      "rathole_ft": "Geo-Activity Interaction!E26",
+      "surface_temperature_f": "Geol Sal!D185",
+      "temperature_gradient_f_per_100ft": "Geol Sal!D186",
+      "hydrostatic_gradient_psi_per_ft": "Geol Sal!D188",
+      "lithostatic_gradient_psi_per_ft": "Geol Sal!D187",
+      "fracture_pressure_fraction": "Geol Sal!D189",
+      "max_injection_fracture_fraction": "Geol Sal!D326",
+      "vertical_horizontal_permeability_ratio": "Geol Sal!D190",
+      "reservoir_density_kg_m3": "Geol Sal!D360 cached reference property",
+      "reservoir_viscosity_cp": "Geol Sal!D502 cached reference property",
+      "law_bachu_coefficient": "Geol Sal!D505",
+      "mechanical_daily_t": "Geol Sal!D324",
+      "peak_average_ratio": "Geol Sal!D474",
+      "spare_well_fraction": "Geol Sal!D330",
+      "minimum_built_wells": "Geol Sal!D329",
+      "injection_years": "Geol Sal!D471",
+      "drilling_curve": "Drilling Costs!H48:J48; Texas check H12:J12",
+      "drilling_localization_factor": "Scenario assumption; no China calibration",
+      "drilling_2006_to_2008_factor": "Drilling Costs!BI8/BI4, original legacy factor",
+      "capital_contingency_fraction": "Key_Inputs!AA33; Back-End_Cost Items!AQ",
+      "pump_density_kg_m3": "Surf Eq Cost!D46 cached reference property",
+      "pump_efficiency": "Surf Eq Cost!D47",
+      "pump_delta_mpa": "Surf Eq Cost!D44-D42",
+      "pump_fixed_usd2008": "Surf Eq Cost!D50",
+      "pump_usd2008_per_kw": "Surf Eq Cost!D51",
+      "wells_per_header": "Surf Eq Cost!D71 formula",
+      "header_usd2008": "Surf Eq Cost!D72",
+      "branch_radius_multiplier": "Surf Eq Cost!D87",
+      "building_usd2008": "Surf Eq Cost!D102",
+      "control_usd2008": "Surf Eq Cost!D113",
+      "road_length_mile": "Surf Eq Cost!D124",
+      "road_usd2008_per_mile": "Surf Eq Cost!D125",
+      "custody_gauge_usd2008": "Surf Eq Cost!D138"
+    },
+    "well_component_sources": {
+      "permits": "Activity_Inputs!BK28; Back-End_Cost Items!303",
+      "drill_complete": "Activity_Inputs!BK37; Back-End_Cost Items!312",
+      "site_preparation": "Activity_Inputs!BK40; Back-End_Cost Items!325",
+      "wireline_logging": "Activity_Inputs!BK69; Back-End_Cost Items!338",
+      "coring": "Activity_Inputs!BK85; Back-End_Cost Items!350",
+      "fluid_sampling": "Activity_Inputs!BK97; Back-End_Cost Items!359",
+      "well_tests": "Activity_Inputs!BK107; Back-End_Cost Items!367",
+      "vsp_characterization": "Activity_Inputs!BK115; Back-End_Cost Items!379",
+      "reservoir_analysis": "Activity_Inputs!BK128; Back-End_Cost Items!386",
+      "wellhead_equipment": "Activity_Inputs!BK136; Back-End_Cost Items!394 Expense",
+      "other_completion": "Activity_Inputs!BK151; Back-End_Cost Items!405 Expense",
+      "downhole_equipment": "Activity_Inputs!BK162; Back-End_Cost Items!415",
+      "onsite_branch": "Surf Eq Cost!D84:D90; Back-End_Cost Items!473"
+    },
+    "thickness": "Local effective sand thickness used as gross formation thickness (gross=net).",
+    "depth": "NETL Woodbine top-depth proxy unless explicitly overridden; no local measured depth.",
+    "properties": "Fixed NETL reference CO2 density and viscosity; no EOS/PVT recalculation.",
+    "unit_conversions": "Exact 0.3048 m/ft; original geological 0.0068948 MPa/psi; exact square-mile area.",
+    "well_capacity": "Continuous spare/peak-adjusted annual proxy; integer design wells calculated separately.",
+    "allocation": "All shared surface equipment sized at design annual_t and charged to site opening; branch charged per well.",
+    "price_basis": "USD2008, undiscounted and unannualized; legacy 1.025625 drill-price factor preserved, not 2-year compounding.",
+    "scope": "Initial construction and pump electricity only; excludes fixed/per-well O&M, closure, postclosure, water management and external feeder."
+  },
+  "pump_operating_case": {
+    "passed": true,
+    "case": "fixed_NETL_workbook_pump_case",
+    "pump_enabled": true,
+    "pressure_basis": "psig inputs converted to MPa without adding atmospheric pressure",
+    "inlet_pressure_mpa_gauge": 8.273708748,
+    "outlet_pressure_mpa_gauge": 15.168466038,
+    "pressure_lift_mpa": 6.894757289999999,
+    "mean_source_pressure_mpa": 11.721087393000001,
+    "density_kg_m3": 923.2193909657408,
+    "efficiency": 0.75,
+    "pump_temperature_c": 11.666666666666666,
+    "pump_temperature_k": 284.81666666666666,
+    "electricity_kwh_per_t": 2.765988058851194,
+    "reference_annual_tonnes": 3200000.0,
+    "peak_average_ratio": 1.25,
+    "reference_peak_power_kw": 1263.0082460507733,
+    "source_cells": {
+      "Key_Inputs!T5": {
+        "value": "yes",
+        "formula": ""
+      },
+      "Surf Eq Cost!D35": {
+        "value": "yes",
+        "formula": "LOWER(Key_Inputs!T5)"
+      },
+      "Key_Inputs!S6": {
+        "value": "psig",
+        "formula": ""
+      },
+      "Key_Inputs!S7": {
+        "value": "psig",
+        "formula": ""
+      },
+      "Surf Eq Cost!E41": {
+        "value": "psig",
+        "formula": ""
+      },
+      "Surf Eq Cost!E43": {
+        "value": "psig",
+        "formula": ""
+      },
+      "Surf Eq Cost!E42": {
+        "value": "MPa",
+        "formula": ""
+      },
+      "Surf Eq Cost!E44": {
+        "value": "MPa",
+        "formula": ""
+      },
+      "Surf Eq Cost!E40": {
+        "value": "kg/sec",
+        "formula": ""
+      },
+      "Surf Eq Cost!E46": {
+        "value": "kg/m3",
+        "formula": ""
+      },
+      "Surf Eq Cost!E48": {
+        "value": "kW",
+        "formula": ""
+      },
+      "Surf Eq Cost!D41": {
+        "value": "1200",
+        "formula": "Key_Inputs!R6"
+      },
+      "Surf Eq Cost!D42": {
+        "value": "8.2737087480000007",
+        "formula": "0.00689475729*D41"
+      },
+      "Surf Eq Cost!D43": {
+        "value": "2200",
+        "formula": "Key_Inputs!R7"
+      },
+      "Surf Eq Cost!D44": {
+        "value": "15.168466038",
+        "formula": "0.00689475729*D43"
+      },
+      "Surf Eq Cost!D45": {
+        "value": "11.721087393000001",
+        "formula": "(D44+D42)*0.5"
+      },
+      "Surf Eq Cost!D46": {
+        "value": "923.21939096574079",
+        "formula": "denPRCO2(0,D45,D39)"
+      },
+      "Surf Eq Cost!D15": {
+        "value": "3.1999999999999997",
+        "formula": "'Geo-Activity Interaction'!E11"
+      },
+      "Surf Eq Cost!D36": {
+        "value": "1.25",
+        "formula": "Key_Inputs!F49"
+      },
+      "Surf Eq Cost!D37": {
+        "value": "53",
+        "formula": ""
+      },
+      "Surf Eq Cost!D38": {
+        "value": "11.666666666666666",
+        "formula": "(D37-32)*5/9"
+      },
+      "Surf Eq Cost!D39": {
+        "value": "284.81666666666666",
+        "formula": "D38+273.15"
+      },
+      "Surf Eq Cost!D40": {
+        "value": "126.83916793505833",
+        "formula": "D15*D36*1000000000/(365*24*3600)"
+      },
+      "Surf Eq Cost!D47": {
+        "value": "0.75",
+        "formula": ""
+      },
+      "Surf Eq Cost!D48": {
+        "value": "1263.0082460507733",
+        "formula": "D40*(D44-D42)*1000000*0.001/(D46*D47)"
+      },
+      "Surf Eq Cost!D50": {
+        "value": "87000",
+        "formula": ""
+      },
+      "Surf Eq Cost!D51": {
+        "value": "1400",
+        "formula": ""
+      },
+      "Surf Eq Cost!D52": {
+        "value": "1855211.5444710827",
+        "formula": "IF(D35=\"yes\",D51*D48+D50,0)"
+      },
+      "Surf Eq Cost!D57": {
+        "value": "0.04",
+        "formula": ""
+      },
+      "Surf Eq Cost!D58": {
+        "value": "74208.46177884331",
+        "formula": "D52*D57"
+      },
+      "Surf Eq Cost!D59": {
+        "value": "0.1036",
+        "formula": ""
+      },
+      "Surf Eq Cost!D60": {
+        "value": "916980.36127034773",
+        "formula": "D48*(1/D36)*24*365*D59"
+      },
+      "Surf Eq Cost!D61": {
+        "value": "991188.82304919104",
+        "formula": "IF(D35=\"yes\",D60+D58,0)"
+      },
+      "Key_Inputs!R6": {
+        "value": "1200",
+        "formula": ""
+      },
+      "Key_Inputs!R7": {
+        "value": "2200",
+        "formula": ""
+      },
+      "Key_Inputs!F48": {
+        "value": "3200000",
+        "formula": ""
+      },
+      "Key_Inputs!F49": {
+        "value": "1.25",
+        "formula": ""
+      }
+    },
+    "checks": {
+      "fixed_inlet_psig": {
+        "actual": 1200.0,
+        "expected": 1200.0,
+        "passed": true
+      },
+      "fixed_outlet_psig": {
+        "actual": 2200.0,
+        "expected": 2200.0,
+        "passed": true
+      },
+      "inlet_source_link": {
+        "actual": 1200.0,
+        "expected": 1200.0,
+        "passed": true
+      },
+      "outlet_source_link": {
+        "actual": 2200.0,
+        "expected": 2200.0,
+        "passed": true
+      },
+      "inlet_gauge_conversion": {
+        "actual": 8.273708748,
+        "expected": 8.273708748,
+        "passed": true
+      },
+      "outlet_gauge_conversion": {
+        "actual": 15.168466038,
+        "expected": 15.168466038,
+        "passed": true
+      },
+      "default_pressure_lift_mpa": {
+        "actual": 6.894757289999999,
+        "expected": 6.89475729,
+        "passed": true
+      },
+      "mean_source_pressure_mpa": {
+        "actual": 11.721087393000001,
+        "expected": 11.721087393000001,
+        "passed": true
+      },
+      "fixed_pump_ground_temperature_f": {
+        "actual": 53.0,
+        "expected": 53.0,
+        "passed": true
+      },
+      "pump_temperature_c": {
+        "actual": 11.666666666666666,
+        "expected": 11.666666666666666,
+        "passed": true
+      },
+      "pump_temperature_k": {
+        "actual": 284.81666666666666,
+        "expected": 284.81666666666666,
+        "passed": true
+      },
+      "default_cached_density_kg_m3": {
+        "actual": 923.2193909657408,
+        "expected": 923.2193909657408,
+        "passed": true
+      },
+      "default_pump_efficiency": {
+        "actual": 0.75,
+        "expected": 0.75,
+        "passed": true
+      },
+      "default_peak_average_ratio": {
+        "actual": 1.25,
+        "expected": 1.25,
+        "passed": true
+      },
+      "peak_average_source_link": {
+        "actual": 1.25,
+        "expected": 1.25,
+        "passed": true
+      },
+      "reference_annual_tonnes": {
+        "actual": 3199999.9999999995,
+        "expected": 3200000.0,
+        "passed": true
+      },
+      "default_electricity_kwh_per_t": {
+        "actual": 2.7659880588511943,
+        "expected": 2.765988058851194,
+        "passed": true
+      },
+      "reference_peak_mass_flow_kg_s": {
+        "actual": 126.83916793505833,
+        "expected": 126.83916793505834,
+        "passed": true
+      },
+      "reference_peak_power_kw": {
+        "actual": 1263.0082460507733,
+        "expected": 1263.0082460507733,
+        "passed": true
+      },
+      "annual_energy_peak_power_kw": {
+        "actual": 1263.0082460507733,
+        "expected": 1263.0082460507733,
+        "passed": true
+      },
+      "default_pump_fixed_cost": {
+        "actual": 87000.0,
+        "expected": 87000.0,
+        "passed": true
+      },
+      "default_pump_cost_per_kw": {
+        "actual": 1400.0,
+        "expected": 1400.0,
+        "passed": true
+      },
+      "reference_pump_direct_capital": {
+        "actual": 1855211.5444710827,
+        "expected": 1855211.5444710827,
+        "passed": true
+      },
+      "reference_pump_maintenance": {
+        "actual": 74208.46177884331,
+        "expected": 74208.46177884331,
+        "passed": true
+      },
+      "reference_annual_electricity_cost": {
+        "actual": 916980.3612703477,
+        "expected": 916980.3612703477,
+        "passed": true
+      },
+      "reference_total_om": {
+        "actual": 991188.823049191,
+        "expected": 991188.823049191,
+        "passed": true
+      }
+    },
+    "audit_scope": [
+      "Verifies source inputs, conversions, cached density and pump cost arithmetic against current constants",
+      "The density is the source denPRCO2 cache; VBA/EOS was not rerun and absolute-pressure PVT was not verified",
+      "No local delivery-pressure, wellhead-pressure, wellbore-friction or hydraulic verification is claimed",
+      "Geological reservoir overpressure is separate from the surface pump pressure lift",
+      "The 16-to-27 MPa external reference is a different scenario and is not used",
+      "Pump temperature is 53 F; the 59 F geological surface-temperature proxy is a different input"
+    ]
+  },
+  "electricity_demand_basis": "Fixed contract demand equals design peak pump kW; 12 monthly charges per operating year, paid regardless of realized flow and stopped at the common injection horizon. Added to site M only, without NETL loading, CRF or post-injection charges. Capacity-based billing and excess-demand penalties are not modeled.",
+  "component_note_scope_zh": "engineering_notes和site_notes仅说明初始建设模块的边界；本批整体范围以scope_excluded及operations_notes为准。",
+  "site_notes": {
+    "screening_candidates": 4,
+    "seismic_2d_lines_per_candidate": 2,
+    "successful_site_strat_test_wells": 2,
+    "strat_test_wells": 5,
+    "scenario_choice": "Each opened subsite independently funds all characterization candidates; NETL initial monitoring options",
+    "candidate_cost_basis": "Key_Inputs!L26/L27/L28: candidate count, 2D lines per candidate, successful-site strat wells. Each unsuccessful candidate has one strat well. All candidates use this subsite's depth and 2D line length. Costs are future opening commitments, not shared regional or sunk costs.",
+    "monitoring_count_basis": "Source spacing/minimum/cap rules, scaled to first injection year",
+    "pressure_front_area_multiplier": 10.0,
+    "groundwater_wells_per_injection_well": 1,
+    "vadose_wells_per_injection_well": 1,
+    "screening_years": 1,
+    "characterization_years": 3,
+    "permitting_years": 2,
+    "plume_uncertainty_multiplier": 1.75,
+    "old_well_count_basis": "floor(uncertain design plume mi2 * pressure multiplier * Key_Inputs!L41); NETL density analogue, not a local well inventory",
+    "old_well_assessment": "Row42: three characterization reviews per analogue old deep well; row43 shallow old-well activity remains zero in source",
+    "old_well_rows_excluded": [
+      43
+    ],
+    "initial_classification": "Initial totals and component dictionaries contain Capital only; all Expense is returned separately by offset from injection/build year",
+    "pre_operation_timing": "Source first injection is year7; upfront Expense keeps source offsets. Initial monitoring-well completion Expense occurs at offset0; later additions remain in operating profiles.",
+    "strat_abandonment": "Row458: all 5 stratigraphic test wells, once at offset -3, Expense; no well conversion",
+    "area_cost_boundaries": {
+      "rows_20_21": "Two separate upfront survey-planning activities, each rate times uncertainty area once",
+      "rows_58_60": "Lease/land allowance over 3D acquisition area once; row59 alone is nonzero",
+      "rows_164_168": "Aerial and magnetic acquisition over uncertainty area, three pre-operation events",
+      "row_188": "One 3D acquisition; distinct from planning and land rights"
+    },
+    "eddy_initial_facilities": "Row281: Activity_Inputs!AK138*AM138 = 70000*5, plus 40 geologist hours; once",
+    "closure_plan_boundary": "Initial permit-plan preparation and pre-operation stratigraphic-test-well abandonment included; injection/monitoring closure handled separately",
+    "labor_rate_basis": "Source loaded hourly rates already include G&A",
+    "excluded": [
+      "fixed O&M",
+      "per-well O&M",
+      "operating monitoring",
+      "future monitoring-well additions",
+      "injection/monitoring-well plugging",
+      "post-injection monitoring"
+    ]
+  },
+  "site_monitoring_counts_note_zh": "首批监测井数量随子场规模变化，逐子场数量保存在calculation_details.json。",
+  "price_conversion": {
+    "CPI2008": 215.303,
+    "CPI2020": 258.811,
+    "USD2008_to_USD2020": 1.2020780016999297,
+    "CPI2008_source": "https://www.bls.gov/cpi/tables/supplemental-files/historical-cpi-u-202107.pdf",
+    "electricity": "CNY_y / FX_y * CPI2020 / CPI_y; each tariff uses its own year"
+  },
+  "model_integration_notes_zh": [
+    "F_r按每个独立子场开放一次计；F_w按每口新注入井计；V_r按实际吨数计。",
+    "F只含资本；M/V、运营年龄及生命周期实际支出均不折现、不年化；运营数组下标0对应投运年龄1。",
+    "M为每年固定费用，年龄数组只存M之外的增量；读取后不得将M再次加进原始数组。",
+    "场址M含需量费：合同需量假定等于设计峰值泵功率，每年计12个月，按电价年份换算USD2020后直接加入，不重复乘NETL系数；停注后停止计费。",
+    "当前父模型以千美元和kt/年计价：F、M和年龄支出均除1000，V美元/吨保持数值。",
+    "场址新增资本按sink_lifetime，每井新增资本按well_lifetime，在实际支出年启动CRF及期末余额计算。",
+    "运营年龄活动仅计至共同规划期末；终期封井、剩余旧井整治和后续PISC通过单独生命周期现金流计入。",
+    "前期Expense相对开场年定位，可能早于规划基准年；它是新开场引致的预先承诺费用，不是已发生沉没成本。",
+    "终期矩阵行下标为截至规划期末的场龄减1，列0为规划期末、列1至L为PISC第1至L年；井级向量对每口已建注入井计一次。",
+    "PISC沿用截至停注时已建深部监测井数量和设计羽流监测面积，不追建未发生的运营期后续设施。",
+    "场址监测计划按固定设计规模执行；逐注入井周期按该井井龄执行，均不随求解流量内生改变。",
+    "按源子场完整ID接入父模型，禁止位置或行号映射。",
+    "共用泵和汇管按设计规模一次建设；模型实际流量与累计井数不得超出这套设计的设备能力。",
+    "Design_Built_Wells含峰值与备用冗余，不等于Max_Well_Num；后者按年注入额度和单井最大能力向下取整。",
+    "原表美国产业费用和工程标准作为类比，未作中国造价校准；局部电网代理均保留标记。"
+  ]
+}
