@@ -52,7 +52,9 @@ def build_capture_target(
             or maximum_capture_amount < 0):
         raise ValueError("maximum_capture_amount must be finite and non-negative")
     if normalize_capture_target and curve != "linear":
-        return generate_capture_targets(period_count, maximum_capture_amount, curve, coefficient)
+        return generate_capture_targets(
+            period_count, maximum_capture_amount, curve, coefficient,
+            normalize_capture_target=True)
     return {t: round(maximum_capture_amount * _capture_fraction(t, period_count, curve, coefficient), 3)
             for t in range(1, period_count + 1)}
 

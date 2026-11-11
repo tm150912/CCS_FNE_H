@@ -38,8 +38,8 @@ RESULT_FILE = RESULT_DIR / f"CCS_FNE_{TY}Y_result.csv"
 # 规划期、管径、捕集目标及管道数量等模型参数从 experiment_setup 导入。
 
 # ==================== 算法参数 ====================
-# 时限和快照时刻均以秒配置；2h/5h 是保留的输出字段名，实际时刻以 RECORD_TIMES 为准。
-TIME_LIMIT = 10_900
+# 时限和快照时刻均以秒配置；2h/5h 为兼容历史文件的列名，实际阈值为 1h/3h。
+TIME_LIMIT = 11_000
 GUROBI_OUTPUT_FLAG = 1  # Gurobi 求解日志：0 关闭，1 开启。
 GUROBI_THREADS = 0  # Gurobi 求解线程数：0 自动选择，正整数指定线程数。
 RECORD_TIMES = (("1h", 3_600), ("3h", 10_800))
@@ -410,7 +410,7 @@ def solve_milp(network: NetworkData, costs: CostData, diameters: list[str],
             snapshot.label: (snapshot.ub, snapshot.lb, snapshot.gap)
             for snapshot in recorder.snapshots}
         result = SolveResult(
-            status, ub, lb, gap, *snapshots["2h"], *snapshots["5h"])
+            status, ub, lb, gap, *snapshots["1h"], *snapshots["3h"])
         if return_solution:
             solution = ({name: {key: variable.X for key, variable in group.items()}
                          for name, group in variables.items()}
@@ -457,8 +457,8 @@ def run_case(network: NetworkData, costs: CostData, diameters: list[str],
         network, costs, diameters,
         pipeline_install_limit=np,
         output_flag=GUROBI_OUTPUT_FLAG)
-    print(f"status={result.status}, 2h_gap={result.gap_2h}, "
-          f"5h_gap={result.gap_5h}, gap={result.gap}")
+    print(f"status={result.status}, 1h_gap={result.gap_2h}, "
+          f"3h_gap={result.gap_5h}, gap={result.gap}")
     return {
         "period_num": period_num,
         "D": len(diameters),

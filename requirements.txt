@@ -1,0 +1,10 @@
+# Reference solver version from Data_Suplementary.tex; use Python 3.10.
+# Spatial preprocessing has additional dependencies documented in its guides.
+gurobipy==12.0.3
+numpy
+pandas
+networkx
+openpyxl
+matplotlib
+scipy
+pytest

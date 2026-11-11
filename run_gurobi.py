@@ -49,17 +49,17 @@ PLOT_PERIOD_OUTPUT_DIR = PLOT_OUTPUT_DIR / f"{Path(PLOT_OUTPUT_IMAGE_NAME).stem}
 
 # ==================== 模型参数 ====================
 # 单次运行参数。
-PERIOD_NUM = 30
+PERIOD_NUM = 15
 NP = 3
 DIAMETERS = D_LIST[-1]
 CURVE = "linear"
 COEFFICIENT = None
-MAX_CAPTURE_AMOUNT = 2e6
+MAX_CAPTURE_AMOUNT = 1e6
 NORMALIZE_CAPTURE_TARGET = False  # True（是）：非线性曲线与线性基准等总量；False（否）。
 CAPTURE_AMOUNT_SEQUENCE = None
 
 # ==================== 算法参数 ====================
-TIME_LIMIT = 18000
+TIME_LIMIT = 15000
 GUROBI_OUTPUT_FLAG = 1  # 控制台日志：0 隐藏，1 显示；Excel 始终保存求解日志。
 # 单算例同名 .log 保存完整运行日志；Gurobi 日志开关只影响终端显示。
 
@@ -121,7 +121,9 @@ def build_capture_target(
         raise ValueError(
             "maximum_capture_amount must be finite and non-negative")
     if normalize_capture_target and curve != "linear":
-        return generate_capture_targets(period_count, maximum_capture_amount, curve, coefficient)
+        return generate_capture_targets(
+            period_count, maximum_capture_amount, curve, coefficient,
+            normalize_capture_target=True)
     return {
         period: round(
             maximum_capture_amount * _capture_fraction(

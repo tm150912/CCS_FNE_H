@@ -1,7 +1,7 @@
 """拉格朗日松弛单案例入口：顶部配置、求解调度与结果输出。
 
 结构参考父目录 run_PH.py；只运行下面指定的一个模型算例。
-可直接运行本文件，也可从项目根目录执行：python -m LRforFNE.run_LR
+可直接运行本文件，也可从项目根目录执行：python -m LRforFNE.run_lrh
 """
 from __future__ import annotations
 
@@ -20,7 +20,6 @@ if __package__ in (None, ""):
 from experiment_setup import (D_LIST, compute_cost_data, load_network_data,
                               period_schedule)
 from heuristic_stages.data_io import with_local_capture_target
-from plot_results import plot_results
 from solve_logging import logged_run
 
 from .config import LRConfig
@@ -32,11 +31,10 @@ from .warm_start import WarmStartOptions
 # ==================== 输入输出文件 ====================
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent  # 默认读取父项目根目录的六个 CSV。
-RESULT_DIR = SCRIPT_DIR / "output" / "run_LR"
-PLOT_RESULTS = True  # 有原可行解时输出各期累计建设图；False 只保存表格、JSON 和日志。
+RESULT_DIR = SCRIPT_DIR / "output" / "run_lrh"
 # 结果写入 RESULT_DIR/<method>/；开启归一化时增加 normalized/ 子目录，须在 LRforFNE/output 内。
 # 同一路径再次运行会覆盖该方法的结果；保留历史时先修改 RESULT_DIR。
-# 输出 CCS_FNE_LR_variables.xlsx、result.json、初始化及迭代 history JSONL、方案和乘子 JSON。
+# 输出 variables.xlsx、result.json、初始化及迭代 history JSONL、方案和乘子 JSON。
 
 # ==================== 模型参数 ====================
 PERIOD_NUM = 5  # 期数，须整除 experiment_setup.TY；总年限和费用参数沿用父项目。
@@ -44,16 +42,16 @@ NP = 3  # 每条有向弧全期、全部管径合计的最大管道建设数量�
 DIAMETERS = list(D_LIST[-1])  # 默认使用网格中的最后一组；可改索引或填写按容量递增的管径名称列表。
 CURVE = "linear"  # linear / exponential / logarithmic。
 COEFFICIENT = None  # linear 使用 None；其余曲线填写对应系数。
-MAX_CAPTURE_AMOUNT = 1e6  # 基准末期年捕集目标；归一化后非线性末期可变，单位不再除以 1000。
+MAX_CAPTURE_AMOUNT = 1e6  # 末期年捕集目标，单位 kt/年；默认不启用等总量归一化。
 NORMALIZE_CAPTURE_TARGET = False  # True：是，非线性曲线与线性基准等总量；False：否。
 CAPTURE_AMOUNT_SEQUENCE = None  # 可填写长度为 PERIOD_NUM 的非负序列，允许非单调；优先于曲线。
 
 # ==================== 算法参数 ====================
-LR_METHOD = "bundle"  # The paper uses proximal Bundle optimization.
+METHOD = "bundle"  # The Lagrangian interfaces support proximal Bundle only.
 
 # 初始化：跳过启发式中仅求下界的完整 LP，直接由 P1 和后续搜索取得原可行解。
 # Initialize multipliers once from the original LP with Method=2 and Crossover=0.
-PH_TIME_LIMIT = 1800  # LR 前的 PH 搜索预算（秒，含 context 构建，不含乘子 LP 和 LR）。
+PH_TIME_LIMIT = 2400  # LR 前的 PH 搜索预算（秒，含 context 构建，不含乘子 LP 和 LR）。
 PH_SP_SOLVER_METHOD = "RSS"  # P1 uses the RSS E-Select solver.
 PH_P1_TIME_LIMIT = 500.0  # 全部 P1 剩余预算交给 E-Select 后端，无额外 MILP 精修；受 PH_TIME_LIMIT 限制。
 PH_MAX_ROUNDS = 20  # 初始化启发式 P3/P4/P5 的最多轮数。
@@ -99,7 +97,7 @@ PH_GUROBI_OUTPUT_FLAG = False  # 初解及乘子 LP 的 Gurobi 详细控制台�
 LR_LP_TIME_LIMIT = None  # 乘子初始化 LP 的独立预算（秒，含建模）；None 不限，不能为 0。
 
 # 拉式主循环、全局 gap 与子问题精度。
-LR_TIME_LIMIT = 3600.0  # 每个方法的对偶迭代与后续上界搜索共用总预算；不含初始化。
+LR_TIME_LIMIT = 1200.0  # 对偶迭代与后续上界搜索共用总预算；不含初始化。
 LR_MAX_ITERATIONS = 100  # 仅限制 oracle 评估（含细化）；达到后用剩余时间继续 N3 上界搜索。
 LR_TARGET_GAP = 1e-4  # 仅用已认证 LB 和已审计 UB 判断。
 LR_ORACLE_TIME_LIMIT = 30.0  # 捕集/封存每块每次求解的局部时限，同时受 LR 剩余预算限制。
@@ -213,8 +211,8 @@ def _log_path():
 
 @logged_run(_log_path)
 def main() -> None:
-    if LR_METHOD != "bundle":
-        raise ValueError('LR_METHOD must be bundle')
+    if METHOD != "bundle":
+        raise ValueError('METHOD must be bundle')
     # 在加载全国数据/启动求解前核对输出位置和算法配置。
     case_name = Path(RESULT_DIR).resolve().relative_to(OUTPUT_ROOT.resolve())
     if NORMALIZE_CAPTURE_TARGET:
@@ -223,7 +221,7 @@ def main() -> None:
     if options.lp_time_limit == 0:
         raise ValueError('multiplier LP time limit must be None or positive')
     diameters = list(DIAMETERS)
-    print(f"method={LR_METHOD}, period_num={PERIOD_NUM}, NP={NP}, D={diameters}, "
+    print(f"method={METHOD}, period_num={PERIOD_NUM}, NP={NP}, D={diameters}, "
           f"curve={CURVE}, coefficient={COEFFICIENT}, max_capture={MAX_CAPTURE_AMOUNT}, "
           f"capture_sequence={CAPTURE_AMOUNT_SEQUENCE}, normalize_capture_target={NORMALIZE_CAPTURE_TARGET}")
     started = perf_counter()
@@ -238,15 +236,15 @@ def main() -> None:
     preparation_runtime = perf_counter()-prepared
     print(f"capture_target={costs.capture_target}")
     invocation = deepcopy(dict(
-        entrypoint='LRforFNE.run_LR', data_dir=str(Path(DATA_DIR).resolve()),
-        method=LR_METHOD, period_num=PERIOD_NUM, pipeline_install_limit=NP,
+        entrypoint='LRforFNE.run_lrh', data_dir=str(Path(DATA_DIR).resolve()),
+        method=METHOD, period_num=PERIOD_NUM, pipeline_install_limit=NP,
         diameters=diameters, curve=CURVE, coefficient=COEFFICIENT,
         max_capture_amount=MAX_CAPTURE_AMOUNT,
         normalize_capture_target=NORMALIZE_CAPTURE_TARGET,
         capture_amount_sequence=None if CAPTURE_AMOUNT_SEQUENCE is None
             else list(CAPTURE_AMOUNT_SEQUENCE)))
     kwargs = dict(pipeline_install_limit=NP, config=config, heuristic_options=options)
-    results = {LR_METHOD: solve_lr(network, costs, diameters, method=LR_METHOD, **kwargs)}
+    results = {METHOD: solve_lr(network, costs, diameters, method=METHOD, **kwargs)}
     for method, result in results.items():
         result.configuration['normalize_capture_target'] = invocation['normalize_capture_target']
         result.configuration['invocation'] = deepcopy(invocation)
@@ -256,15 +254,10 @@ def main() -> None:
               f"UB={result.objective}, LB={result.lower_bound}, gap={result.gap}, "
               f"runtime={result.total_runtime:.3f}s\nresults={output}")
         workbook = write_workbook(result, network, costs, diameters,
-                                  output / "CCS_FNE_LR_variables.xlsx")
+                                  output / "variables.xlsx")
         print(f"workbook={workbook}")
         if result.objective is None:
             print("未取得原问题可行解，已保存参数、求解摘要及日志，不导出建设变量或绘图。")
-        elif PLOT_RESULTS:
-            for image in plot_results(result.solution, network, periods=costs.periods,
-                    diameters=diameters, output_file=output / "CCS_FNE_LR.png",
-                    period_output_dir=output / "CCS_FNE_LR_periods", evolution_only=True):
-                print(f"result_plot={image}")
 
 
 if __name__ == "__main__":

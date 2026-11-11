@@ -1,7 +1,7 @@
 """按 PH 共享参数网格批量运行拉格朗日松弛，逐例保存 CSV 并支持续跑。
 
 直接运行本文件，或从父项目执行 python -m LRforFNE.CCS_FNE_LR。
-算法核心复用 solver；批量不导出逐例变量、JSON 或图片。
+算法核心复用 solver；逐例 JSON 保存后原子更新 CSV，不生成工作簿或图片。
 """
 from __future__ import annotations
 
@@ -22,6 +22,7 @@ from experiment_setup import (CURVE_SPECS, D_LIST, MAX_CAPTURE_AMOUNT_LIST,
 from read import grid_instance_key, read_result_rows, result_instance_key
 
 from .config import LRConfig
+from .result_io import write_result
 from .solver import solve_lr
 from .warm_start import WarmStartOptions
 
@@ -29,7 +30,7 @@ from .warm_start import WarmStartOptions
 # ==================== 输入输出文件 ====================
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR.parent
-RESULT_DIR = SCRIPT_DIR / "output"
+RESULT_DIR = SCRIPT_DIR / "output" / "batch"
 NORMALIZE_CAPTURE_TARGET = False  # True：非线性序列与线性基准等总量。
 # 每个方法分别写 CCS_FNE_LR_<method>_<TY>Y_result.csv；归一化结果写入 normalized/。
 # 续跑按模型参数匹配；更换数据或算法设置进行新实验时，应更换 RESULT_DIR。
@@ -38,14 +39,14 @@ NORMALIZE_CAPTURE_TARGET = False  # True：非线性序列与线性基准等总�
 # 与 CCS_FNE_PH.py 共用 experiment_setup 的五维网格：
 # PERIOD_NUM_LIST、MAX_CAPTURE_AMOUNT_LIST、NP_LIST、CURVE_SPECS、D_LIST。
 # NP 是每条有向弧全期、全部管径合计的管道条数上限。
-# 以下算法参数独立于 run_LR.py；修改单算例设置不会影响本入口。
+# 以下算法参数独立于 run_lrh.py；修改单算例设置不会影响本入口。
 
 # ==================== 算法参数 ====================
-LR_METHOD = "bundle"  # The paper uses proximal Bundle optimization.
+METHOD = "bundle"  # The paper uses proximal Bundle optimization.
 
 # 初始化：跳过启发式中仅求下界的完整 LP，直接由 P1 和后续搜索取得原可行解。
 # Initialize multipliers once from the original LP with Method=2 and Crossover=0.
-PH_TIME_LIMIT = 1800  # LR 前的 PH 搜索预算（秒，含 context 构建，不含乘子 LP 和 LR）。
+PH_TIME_LIMIT = 2400  # LR 前的 PH 搜索预算（秒，含 context 构建，不含乘子 LP 和 LR）。
 PH_SP_SOLVER_METHOD = "RSS"  # P1 uses the RSS E-Select solver.
 PH_P1_TIME_LIMIT = 500.0  # 全部 P1 剩余预算交给 E-Select 后端，无额外 MILP 精修；受 PH_TIME_LIMIT 限制。
 PH_MAX_ROUNDS = 20  # 初始化启发式 P3/P4/P5 的最多轮数。
@@ -91,7 +92,7 @@ PH_GUROBI_OUTPUT_FLAG = False  # 初解及乘子 LP 的 Gurobi 详细控制台�
 LR_LP_TIME_LIMIT = None  # 乘子初始化 LP 的独立预算（秒，含建模）；None 不限，不能为 0。
 
 # 拉式主循环、全局 gap 与子问题精度。
-LR_TIME_LIMIT = 3600.0  # 每个方法的对偶迭代与后续上界搜索共用总预算；不含初始化。
+LR_TIME_LIMIT = 1200.0  # 对偶迭代与后续上界搜索共用总预算；不含初始化。
 LR_MAX_ITERATIONS = 100  # 仅限制 oracle 评估（含细化）；达到后用剩余时间继续 N3 上界搜索。
 LR_TARGET_GAP = 1e-4  # 仅用已认证 LB 和已审计 UB 判断。
 LR_ORACLE_TIME_LIMIT = 90.0  # 捕集/封存每块每次求解的局部时限，同时受 LR 剩余预算限制。
@@ -202,18 +203,19 @@ RESULT_COLUMNS = [
     "UB", "LB", "gap", "runtime", "curve", "status", "method",
     "termination_reason", "initial_UB", "warm_start_runtime", "lr_runtime",
     "shared_warm_start_runtime", "lp_status", "lp_objective", "lp_runtime",
-    "lower_bound_origin", "iterations", "max_violation"]
+    "lower_bound_origin", "iterations", "max_violation", "result_dir"]
 # 达到时限、迭代上限或正常停滞视为本次实验完成，不表示全局最优。
 # 初始化失败、oracle 未完成、数值/求解器错误和人工中断下次重试。
 COMPLETED_STATUSES = (
     "GAP_CERTIFIED", "FEASIBLE_TIME_LIMIT", "FEASIBLE_ITERATION_LIMIT",
-    "FEASIBLE_STAGNATION")
+    "FEASIBLE_STAGNATION", "PROVEN_INFEASIBLE")
 
 
-def _methods():
-    if LR_METHOD != "bundle":
-        raise ValueError("LR_METHOD must be bundle")
-    return (LR_METHOD,)
+def _methods(method=None):
+    method = METHOD if method is None else method
+    if method != "bundle":
+        raise ValueError("METHOD must be bundle")
+    return (method,)
 
 
 def _case_grid():
@@ -221,31 +223,46 @@ def _case_grid():
                    NP_LIST, CURVE_SPECS, D_LIST)
 
 
-def result_file(method):
-    directory = Path(RESULT_DIR) / ("normalized" if NORMALIZE_CAPTURE_TARGET else "")
+def result_file(method, *, result_dir=None, normalize_capture_target=None):
+    directory = Path(RESULT_DIR if result_dir is None else result_dir)
+    normalize = (NORMALIZE_CAPTURE_TARGET if normalize_capture_target is None
+                 else normalize_capture_target)
+    if normalize:
+        directory /= "normalized"
     return directory / f"CCS_FNE_LR_{method}_{TY}Y_result.csv"
 
 
-def save_results(rows, method):
-    target = result_file(method)
+def save_results(rows, method, *, result_dir=None, normalize_capture_target=None):
+    target = result_file(method, result_dir=result_dir,
+                         normalize_capture_target=normalize_capture_target)
     target.parent.mkdir(parents=True, exist_ok=True)
     _atomic_write_csv(pd.DataFrame(rows, columns=RESULT_COLUMNS), target)
 
 
 def run_case(network, costs, diameters, period_num, curve, coefficient, np,
-             *, maximum_capture_amount, methods=None):
+             *, maximum_capture_amount, methods=None, config=None,
+             heuristic_options=None, result_dir=None, normalize_capture_target=None):
     """Solve one instance with the Bundle algorithm and its PH initialization."""
     methods = _methods() if methods is None else tuple(methods)
     if methods != ("bundle",):
         raise ValueError("methods must contain only bundle")
-    if LR_OUTPUT_FLAG:
+    config = build_config() if config is None else config.validate()
+    options = build_heuristic_options() if heuristic_options is None else heuristic_options
+    options.validate()
+    if config.output_flag:
         print(f"method={methods}, period_num={period_num}, Np={np}, curve={curve}, "
               f"coef={coefficient}, max_capture_amount={maximum_capture_amount}, D={diameters}")
-    kwargs = dict(pipeline_install_limit=np, config=build_config(),
-                  heuristic_options=build_heuristic_options())
+    kwargs = dict(pipeline_install_limit=np, config=config, heuristic_options=options)
     results = {methods[0]: solve_lr(network, costs, diameters, method=methods[0], **kwargs)}
     rows = []
     for method, result in results.items():
+        shape = "none" if coefficient is None else f"{coefficient:.17g}"
+        case_name = (f"T{period_num}_D{len(diameters)}_NP{np}_"
+                     f"C{maximum_capture_amount:.17g}_{curve}_{shape}")
+        directory = result_file(method, result_dir=result_dir,
+            normalize_capture_target=normalize_capture_target).parent
+        # A failed JSON export leaves the CSV unchanged, so the case is retried.
+        detail = write_result(result, Path("cases") / case_name, output_root=directory)
         lp = result.configuration.get("multiplier_initialization", {})
         rows.append(dict(
             period_num=period_num, D=len(diameters), Np=np,
@@ -258,33 +275,41 @@ def run_case(network, costs, diameters, period_num, curve, coefficient, np,
             lp_status=lp.get("status"), lp_objective=lp.get("objective"),
             lp_runtime=lp.get("runtime"), lower_bound_origin=result.lower_bound_origin,
             iterations=len(result.history),
-            max_violation=result.audit["max_violation"] if result.audit else None))
-        if LR_OUTPUT_FLAG:
+            max_violation=result.audit["max_violation"] if result.audit else None,
+            result_dir=str(detail)))
+        if config.output_flag:
             print(f"{method}: status={result.status}, reason={result.termination_reason}, "
                   f"UB={result.objective}, LB={result.lower_bound}, gap={result.gap}, "
                   f"runtime={result.total_runtime:.3f}s")
     return rows
 
 
-def main() -> None:
-    """每完成一个算例更新 CSV；按方法分别跳过已完成组合。"""
-    methods = _methods()
-    build_config()
-    options = build_heuristic_options()
+def run_batch(*, config=None, heuristic_options=None, data_dir=None, result_dir=None,
+              normalize_capture_target=None, method=None):
+    """Save each case's JSON before its CSV row; resume normally completed cases."""
+    methods = _methods(method)
+    config = build_config() if config is None else config.validate()
+    options = build_heuristic_options() if heuristic_options is None else heuristic_options
+    options.validate()
     if options.lp_time_limit == 0:
         raise ValueError("Multiplier LP time limit must be None or positive")
+    normalize = (NORMALIZE_CAPTURE_TARGET if normalize_capture_target is None
+                 else normalize_capture_target)
+    paths = {method: result_file(method, result_dir=result_dir,
+                                normalize_capture_target=normalize) for method in methods}
     cases = list(_case_grid())
     rows, completed = {}, {}
     for method in methods:
         rows[method], completed[method] = read_result_rows(
-            result_file(method), cases, completed_statuses=COMPLETED_STATUSES)
-        if LR_OUTPUT_FLAG:
+            paths[method], cases, completed_statuses=COMPLETED_STATUSES)
+        if config.output_flag:
             print(f"{method}: {len(cases)} cases, {len(completed[method])} completed, "
                   f"{len(cases) - len(completed[method])} pending.")
     if all(grid_instance_key(case) in completed[method] for case in cases for method in methods):
-        print(f"All current cases already completed. Results: {[str(result_file(m)) for m in methods]}")
-        return
-    network = load_network_data(DATA_DIR)
+        if config.output_flag:
+            print(f"All current cases already completed. Results: {[str(paths[m]) for m in methods]}")
+        return rows
+    network = load_network_data(DATA_DIR if data_dir is None else data_dir)
     active_period_num = None
     try:
         for case in cases:
@@ -300,24 +325,32 @@ def main() -> None:
                 active_period_num = period_num
             costs = with_capture_target(
                 base_costs, curve, coefficient, maximum_capture_amount=maximum,
-                normalize_capture_target=NORMALIZE_CAPTURE_TARGET)
+                normalize_capture_target=normalize)
             current = run_case(network, costs, diameters, period_num, curve, coefficient,
-                               np, maximum_capture_amount=maximum, methods=pending)
+                np, maximum_capture_amount=maximum, methods=pending, config=config,
+                heuristic_options=options, result_dir=result_dir,
+                normalize_capture_target=normalize)
             for row in current:
                 method = row["method"]
                 rows[method] = [old for old in rows[method] if result_instance_key(old) != key]
                 rows[method].append(row)
-                save_results(rows[method], method)
-                if LR_OUTPUT_FLAG:
-                    print(f"Results saved: {result_file(method)}")
+                save_results(rows[method], method, result_dir=result_dir,
+                             normalize_capture_target=normalize)
+                if config.output_flag:
+                    print(f"Results saved: {paths[method]}")
                 if row["status"] == "FEASIBLE_INTERRUPTED":
                     print("Interrupted. Current results saved; rerun to retry unfinished cases.")
-                    return
+                    return rows
     except KeyboardInterrupt:
         print("Interrupted. Previously completed results remain saved.")
         raise
-    if LR_OUTPUT_FLAG:
-        print(f"Batch finished. Results: {[str(result_file(m)) for m in methods]}")
+    if config.output_flag:
+        print(f"Batch finished. Results: {[str(paths[m]) for m in methods]}")
+    return rows
+
+
+def main() -> None:
+    run_batch()
 
 
 if __name__ == "__main__":

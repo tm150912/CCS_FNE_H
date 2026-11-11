@@ -24,26 +24,16 @@ PROJECT_DIR = Path(__file__).resolve().parent
 # Algorithm-specific solver limits and output settings remain in the corresponding
 # solver module.
 
-# TY = 30
-# NP_LIST = [1, 3]
-# MAX_CAPTURE_AMOUNT_LIST = [0.5e6, 2e6]
-# PERIOD_NUM_LIST = [5, 10, 15, 30]
-# E_LIST = [1, 2.5, 4]
-# L_LIST = [2, 15, 500]
-
-# D_LIST = [
-#     ["p4", "p6", "p20", "p48"],
-#     ["p4", "p6", "p10", "p12", "p16", "p20",
-#      "p24a", "p24b", "p30a", "p30b", "p36", "p48"]]
-
+# Data_Suplementary.tex: 2 catalogs x 4 period counts x 2 limits x 2 scales x 7 profiles.
 TY = 30
-NP_LIST = [3]
-MAX_CAPTURE_AMOUNT_LIST = [2e6]
-PERIOD_NUM_LIST = [10, 15, 30]
-E_LIST = [2.5]
-L_LIST = [15]
+NP_LIST = [1, 3]
+MAX_CAPTURE_AMOUNT_LIST = [0.5e6, 2e6]  # kt/year: 0.5 and 2 Gt/year.
+PERIOD_NUM_LIST = [5, 10, 15, 30]
+E_LIST = [1, 2.5, 4]
+L_LIST = [2, 15, 500]
 
 D_LIST = [
+    ["p4", "p6", "p20", "p48"],
     ["p4", "p6", "p10", "p12", "p16", "p20",
      "p24a", "p24b", "p30a", "p30b", "p36", "p48"]]
 
@@ -290,7 +280,8 @@ def with_capture_target(
         maximum_capture_amount=maximum_capture_amount)
 
     if normalize_capture_target and curve != "linear":
-        target = generate_capture_targets(period_count, maximum, curve, coefficient)
+        target = generate_capture_targets(
+            period_count, maximum, curve, coefficient, normalize_capture_target=True)
     else:
         target = {period: round(_capture_fraction(period, period_count,
                                                   curve, coefficient) * maximum, 3)

@@ -41,7 +41,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = SCRIPT_DIR
 RESULT_DIR = SCRIPT_DIR / "output" / ("normalized" if NORMALIZE_CAPTURE_TARGET else "")
 RESULT_FILE = RESULT_DIR / f"CCS_FNE_PH_{TY}Y_result.csv"
-CHECKPOINT_FILE = RESULT_DIR / f"CCS_FNE_PH_{TY}Y_checkpoint.csv"  # 仅兼容读取旧版记录。
+CHECKPOINT_FILE = RESULT_DIR / f"CCS_FNE_H_{TY}Y_checkpoint.csv"  # 仅兼容读取旧版记录。
 
 # ==================== 模型参数 ====================
 # 与 CCS_FNE.py 共用 experiment_setup.py 中的五维参数网格：

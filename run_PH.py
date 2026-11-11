@@ -47,12 +47,12 @@ PLOT_PERIOD_OUTPUT_DIR = PLOT_OUTPUT_DIR / f"{Path(PLOT_OUTPUT_IMAGE_NAME).stem}
 
 # ==================== 模型参数 ====================
 # 单次运行参数，直接在此修改。
-PERIOD_NUM = 30  # 规划期数；须整除 experiment_setup.TY，总年数按此均分（当前 TY=30）。
+PERIOD_NUM = 15  # 规划期数；须整除 experiment_setup.TY，总年数按此均分（当前 TY=30）。
 NP = 3  # 每条有向弧全期、所有管径合计的最大建设条数；须为非负整数。
 DIAMETERS = D_LIST[-1]  # 默认使用网格中的最后一组；须按容量递增，可改索引或直接填写管径名称列表。
 CURVE = "linear"  # 目标曲线类型：linear（线性）、exponential（指数）、logarithmic（对数）。
 COEFFICIENT = None  # 曲线系数：线性设 None；指数为非零有限数；对数须大于 -1 且非零。
-MAX_CAPTURE_AMOUNT = 2e6  # 归一化关闭时为曲线末期年目标；开启时为线性基准末期年目标。
+MAX_CAPTURE_AMOUNT = 1e6  # 归一化关闭时为曲线末期年目标；开启时为线性基准末期年目标。
 NORMALIZE_CAPTURE_TARGET = False  # True（是）：非线性曲线与线性基准等总量；False（否）。
 CAPTURE_AMOUNT_SEQUENCE = None  # 自定义逐期年捕集目标列表，长度须等于 PERIOD_NUM；非 None 时覆盖曲线参数。
 

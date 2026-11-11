@@ -44,11 +44,11 @@ def _write(path, value):
     temporary.replace(path)
 
 
-def write_result(result, case_name):
-    root = OUTPUT_ROOT.resolve()
+def write_result(result, case_name, *, output_root=None):
+    root = Path(OUTPUT_ROOT if output_root is None else output_root).resolve()
     destination = (root / case_name / result.method).resolve()
     if root not in destination.parents:
-        raise ValueError('Output must remain inside LRforFNE/output')
+        raise ValueError('Output must remain inside the selected output root')
     destination.mkdir(parents=True, exist_ok=True)
     metadata = {item.name:getattr(result,item.name) for item in fields(result)
                 if item.name not in ('solution','history','best_multipliers','initial_multipliers',
